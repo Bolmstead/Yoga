@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="row featurette">
+    <div class="col-md-7 order-md-2"><br>
+      <h2 class="featurette-heading">{{ user.first_name }} {{ user.last_name }}</h2>
+      <p class="lead">Username: {{user.username}}</p>
+      <p class="lead">Email: {{user.email}}</p>
+      <p class="lead">You are currently signed up for the following classes:</p>
+      <p class="lead">You are are not signed up for any classes.</p>
+    </div>
+    <div class="col-md-5 order-md-1">
+        <img src="{{ user.image_url }}" alt="Image for {{ user.username }}" id="profile-pic">
+        {% if g.user.id == user.id %}
+        <a href="/users/edit" class="btn btn-outline-secondary">Edit Information</a>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

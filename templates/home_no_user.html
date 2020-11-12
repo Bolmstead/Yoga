@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+
+  <div class="bg position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light" id="background-image">
+    <div class="col-md-12 p-lg-5 mx-auto my-5">
+      <h1 class="display-4 font-weight-normal">Lunchtime Yoga for Professionals</h1>
+      <p class="lead font-weight-normal">This is the homepage for the yoga website.</p>
+      <a href="/login" class="btn btn-primary btn-lg">Login</a>
+      <a href="/signup" class="btn btn-success btn-lg">Sign up</a>
+    </div>
+  </div>
+  
+
+  <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">About</h1><br>
+    <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+      Qui vel quisquam ratione architecto sit unde, odit autem reiciendis alias aliquam 
+      officia quidem rem iusto minima sapiente, consectetur error, adipisci optio?</p>
+  </div>
+  <hr class="featurette-divider"><br>
+  <div class="px-3 pt-md-1 pb-md-10 mx-auto text-center">
+    
+    <h1 class="display-4">Instructors</h1><br>
+  </div>
+<div class="row featurette">
+    <div class="col-md-7 order-md-2"><br>
+      <h2 class="featurette-heading">Lisa Olmstead</h2>
+      <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+        Qui vel quisquam ratione architecto sit unde, odit autem reiciendis alias aliquam 
+        officia quidem rem iusto minima sapiente, consectetur error, adipisci optio?</p>
+    </div>
+    <div class="col-md-5 order-md-1">
+        <img src="../static/images/mom.jpg" alt="Instructor Image" id="profile-image">
+    </div>
+</div><br>
+  
+<div class="row featurette">
+  <div class="col-md-7">
+    <h2 class="featurette-heading">Jenn</h2>
+    <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+  </div>
+  <div class="col-md-5">
+    <img src="../static/images/profile_pic.png" alt="Instructor Image" id="profile-image">
+  </div>
+</div><br>
+<div class="row featurette">
+  <div class="col-md-7 order-md-2"><br>
+    <h2 class="featurette-heading">AJ</h2>
+    <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+      Qui vel quisquam ratione architecto sit unde, odit autem reiciendis alias aliquam 
+      officia quidem rem iusto minima sapiente, consectetur error, adipisci optio?</p>
+  </div>
+  <div class="col-md-5 order-md-1">
+      <img src="../static/images/profile_pic.png" alt="Instructor Image" id="profile-image">
+  </div>
+</div>
+<br><hr class="featurette-divider"><br>
+<div class="px-3 pt-md-1 pb-md-10 mx-auto text-center">
+    
+  <h1 class="display-4">Classes</h1><br>
+</div>
+<div id='calendar'></div>
+{% endblock %}

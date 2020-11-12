@@ -1,0 +1,70 @@
+<!-- --------base.html-------- -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lunchtime Yoga for Professionals</title>
+
+  <link rel="stylesheet"
+        href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+  <script src="https://unpkg.com/jquery"></script>
+  <script src="https://unpkg.com/bootstrap"></script>
+
+  <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+  <link rel="stylesheet" href="/static/stylesheets/style.css">
+  <script src='static/yoga_js.js'></script>
+  <script src='https://cdn.jsdelivr.net/combine/npm/fullcalendar@5.3.2/main.min.js,npm/fullcalendar@5.3.2/locales-all.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/package.json'></script>
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/README.md'></script>
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.min.css' rel='stylesheet' />
+  <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth'
+      });
+      calendar.render();
+    });
+
+  </script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand">
+        <span>Lunchtime Yoga for Professionals</span>
+      </a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="/">Home</a></li>
+      <li><a href="/">About</a></li>
+      <li><a href="/">Instructors</a></li>
+      <li><a href="/classes">Classes</a></li>
+      <li><a href="/">Contact</a></li>
+      <li><a href="/">Edit Classes</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      {% if not g.user %}
+      <li><a href="/signup">Sign up</a></li>
+      <li><a href="/login">Log in</a></li>
+      {% else %}
+      <li><a href="/users/detail">Account</a></li>
+      <li><a href="/logout">Log out</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+<div class="container">
+
+  {% block content %}
+  {% endblock %}
+
+</div>
+</body>
+</html>
