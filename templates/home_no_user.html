@@ -1,11 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-
-
-
-
   <div class="bg position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light" id="background-image">
-    <div class="col-md-12 p-lg-5 mx-auto my-5">
+    <div class="col-md-10 p-lg-5 mx-auto my-5">
       <h1 class="display-4 font-weight-normal">Lunchtime Yoga for Professionals</h1>
       <p class="lead font-weight-normal">This is the homepage for the yoga website.</p>
       <a href="/login" class="btn btn-primary btn-lg">Login</a>
@@ -14,15 +10,16 @@
   </div>
   
 
-  <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" id="about">
     <h1 class="display-4">About</h1><br>
     <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
       Qui vel quisquam ratione architecto sit unde, odit autem reiciendis alias aliquam 
       officia quidem rem iusto minima sapiente, consectetur error, adipisci optio?</p>
   </div>
   <hr class="featurette-divider"><br>
+
+
   <div class="px-3 pt-md-1 pb-md-10 mx-auto text-center">
-    
     <h1 class="display-4">Instructors</h1><br>
   </div>
 <div class="row featurette">
@@ -36,7 +33,6 @@
         <img src="../static/images/mom.jpg" alt="Instructor Image" id="profile-image">
     </div>
 </div><br>
-  
 <div class="row featurette">
   <div class="col-md-7">
     <h2 class="featurette-heading">Jenn</h2>
@@ -58,9 +54,18 @@
   </div>
 </div>
 <br><hr class="featurette-divider"><br>
+
+
 <div class="px-3 pt-md-1 pb-md-10 mx-auto text-center">
-    
-  <h1 class="display-4">Classes</h1><br>
+  <h1 class="display-4" id='calendar_jump'>Classes</h1><br>
 </div>
 <div id='calendar'></div>
+
+
+<hr class="featurette-divider"><br>
+<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" id="contact_jump">
+  <h1 class="display-4">Contact Info</h1><br>
+  <p class="lead">Email: Phone: Facebook link:</p>
+</div>
+
 {% endblock %}

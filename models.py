@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 
+
 class User(db.Model):
     """User in the system."""
 
@@ -135,6 +136,45 @@ class Instructors(db.Model):
 
     classes = db.relationship('Classes', backref='instructor')
 
+    def __repr__(self):
+        return '<Instructor {}>'.format(self.first_name)
+
+    @classmethod
+    def instructor_signup(cls, username, first_name, last_name, email, password, image_url):
+        """Sign up user.
+
+        Hashes password and adds user to system.
+        """
+
+        hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
+
+        instructor = Instructors(
+            username=username,
+            password=hashed_pwd,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            image_url=image_url,
+        )
+
+        db.session.add(instructor)
+        return instructor
+
+    @classmethod
+    def authenticate(cls, username, password):
+        """Find user with `username` and `password`.
+        If can't find matching user (or if password is wrong), returns False.
+        """
+
+        instructor = cls.query.filter_by(username=username).first()
+
+        if instructor:
+            is_auth = bcrypt.check_password_hash(instructor.password, password)
+            if is_auth:
+                return instructor
+
+        return False
+
 class Classes(db.Model):
     """Connection of a follower <-> followed_user."""
 
@@ -163,6 +203,15 @@ class Classes(db.Model):
         db.ForeignKey('users.id', ondelete="cascade"),
     )
 
+    @classmethod
+    def create_class(cls, instructor):
+
+            yoga_class = Classes(
+                instructor=instructor,
+            )
+
+            db.session.add(yoga_class)
+            return yoga_class
 
 
 def connect_db(app):

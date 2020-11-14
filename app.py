@@ -1,11 +1,10 @@
 import os
 
-from flask import Flask, render_template, request, flash, redirect, session, g, abort
+from flask import Flask, render_template, request, flash, redirect, session, g, abort , url_for
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import *
-from models import *
 import email_validator
 
 CURR_USER_KEY = "curr_user"
@@ -64,6 +63,7 @@ def signup():
     """    """
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
+
     form = UserAddForm()
 
     if form.validate_on_submit():
@@ -86,8 +86,7 @@ def signup():
 
         return redirect("/")
 
-    else:
-        return render_template('users/signup.html', form=form)
+    return render_template('users/signup.html', form=form)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -99,10 +98,16 @@ def login():
     if form.validate_on_submit():
         user = User.authenticate(form.username.data,
                                  form.password.data)
+        instructor = Instructors.authenticate(form.username.data, form.password.data)
 
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
+            return redirect("/")
+
+        if instructor:
+            do_login(instructor)
+            flash(f"Hello, {instructor.username}!", "success")
             return redirect("/")
 
         flash("Invalid credentials.", 'danger')
@@ -132,18 +137,75 @@ def edit_profile():
 
     return render_template('users/detail.html', user=user)
 
-@app.route('/classes', methods=["GET", "POST"])
+############################ CLASSES #####################3
+
+# @app.route('/classes', methods=["GET", "POST"])
+# def view_classes():
+#     """view/signup for available yoga classes using API"""
+
+#     instructors = Instructors.query.all()
+#     classes = Classes.query.all()
+
+#     if not g.user:
+#         user = g.user
+
+
+#     return render_template('classes.html', user=user, classes=classes, instructors=instructors)
+
+################################ INSTRUCTOR ACCESS ########################
+
+@app.route('/instructor_access')
 def view_classes():
+
+    return render_template('instructor_access/index.html')
+
+@app.route('/instructor_access/signup', methods=["GET", "POST"])
+def instructor_signup():
     """view/signup for available yoga classes using API"""
 
-    instructors = Instructors.query.all()
-    classes = Classes.query.all()
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
+    form = UserAddForm()
 
-    if not g.user:
-        user = g.user
+    if form.validate_on_submit():
+        try:
+            instructor = Instructors.instructor_signup(
+                username=form.username.data,
+                password=form.password.data,
+                email=form.email.data,
+                first_name=form.first_name.data,
+                last_name=form.last_name.data,
+                image_url=form.image_url.data or Instructors.image_url.default.arg,
+            )
+            db.session.commit()
+
+        except IntegrityError as e:
+            flash("Username already taken", 'danger')
+            return render_template('instructor_access/index.html', form=form)
+
+        do_login(instructor)
+
+        return redirect("/instructor_access")
 
 
-    return render_template('classes.html', user=user, classes=classes, instructors=instructors)
+    return render_template('instructor_access/signup.html',form=form)
+
+@app.route('/instructor_access/add_class', methods=["GET", "POST"])
+def add_class():
+    """view/signup for available yoga classes using API"""
+    form = ClassAddForm()
+
+    if form.validate_on_submit():
+        yoga_class = Classes.create_class(
+            instructor=form.instructor.data)
+
+        db.session.add(yoga_class)
+        db.session.commit()
+
+        return redirect("/instructor_access")
+
+
+    return render_template('instructor_access/add_class.html', form=form)
 
 # @app.route('/users/delete', methods=["POST"])
 # def delete_user():

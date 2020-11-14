@@ -1,15 +1,31 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, SelectField, DateTimeField
 from wtforms.validators import DataRequired, Email, Length
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from models import *
 
 
-class ClassCreateForm(FlaskForm):
+def choice_query():
+    return Instructors.query
+
+class ClassAddForm(FlaskForm):
     """Form for adding/editing messages."""
 
-    text = TextAreaField('text', validators=[DataRequired()])
+    instructor = QuerySelectField(query_factory=choice_query, allow_blank=True, get_label='first_name')
 
+    # start_time = DateTimeField(label='Start Time', format='%Y-%m-%d %H:%M:%S')
 
 class UserAddForm(FlaskForm):
+    """Form for adding users."""
+
+    username = StringField('Username', validators=[DataRequired()])
+    first_name = StringField('First Name',validators=[DataRequired()])
+    last_name = StringField('Last Name',validators=[DataRequired()])
+    email = StringField('E-mail', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[Length(min=7)])
+    image_url = StringField('(Optional) Image URL')
+
+class InstructorAddForm(FlaskForm):
     """Form for adding users."""
 
     username = StringField('Username', validators=[DataRequired()])
