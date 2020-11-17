@@ -292,3 +292,4 @@
 $(document).ready(function(){
   $("#calendar").simpleCalendar();
 });
+

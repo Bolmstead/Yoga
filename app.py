@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, flash, redirect, session, g, abort , url_for
+from flask import Flask, render_template, request, flash, redirect, session, g, abort , url_for, jsonify 
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
@@ -172,18 +172,13 @@ def edit_profile():
 
 ############################ CLASSES #####################3
 
-# @app.route('/classes', methods=["GET", "POST"])
-# def view_classes():
-#     """view/signup for available yoga classes using API"""
+@app.route('/json')
+def display_json():
+    """view/signup for available yoga classes using API"""
 
-#     instructor = Instructor.query.all()
-#     classes = Classes.query.all()
+    serialized_classes = [c.serialize() for c in Classes.query.all()]
 
-#     if not g.user:
-#         user = g.user
-
-
-#     return render_template('classes.html', user=user, classes=classes, instructor=instructor)
+    return jsonify(serialized_classes)
 
 ################################ INSTRUCTOR ACCESS ########################
 
@@ -241,7 +236,6 @@ def add_class():
             instructor=form.instructor.data,
             location=form.location.data,
             start_date_time=form.start_date_time.data,
-            end_date_time=form.end_date_time.data,
             )
 
         db.session.add(yoga_class)
