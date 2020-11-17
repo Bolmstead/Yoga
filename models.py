@@ -92,7 +92,7 @@ class User(db.Model):
 
 
 
-class Instructors(db.Model):
+class Instructor(db.Model):
     """An individual message ("warble")."""
 
     __tablename__ = 'instructors'
@@ -148,7 +148,7 @@ class Instructors(db.Model):
 
         hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
 
-        instructor = Instructors(
+        instructor = Instructor(
             username=username,
             password=hashed_pwd,
             email=email,
@@ -185,17 +185,21 @@ class Classes(db.Model):
         primary_key=True,
     )
 
-    start_time = db.Column(
-        db.DateTime,
-    )
-
-    end_time = db.Column(
-        db.DateTime,
-    )
-
     class_instructor = db.Column(
         db.Integer,
         db.ForeignKey('instructors.id', ondelete="cascade"),
+    )
+
+    location = db.Column(
+        db.String,
+    )
+
+    start_date_time = db.Column(
+        db.DateTime,
+    )
+
+    end_date_time = db.Column(
+        db.DateTime,
     )
 
     class_users = db.Column(
@@ -203,15 +207,17 @@ class Classes(db.Model):
         db.ForeignKey('users.id', ondelete="cascade"),
     )
 
-    @classmethod
-    def create_class(cls, instructor):
+    # @classmethod
+    # def create_class(cls, instructor, location, date):
 
-            yoga_class = Classes(
-                instructor=instructor,
-            )
+    #         yoga_class = Classes(
+    #             instructor=instructor,
+    #             location=location,
+    #             date=date,
+    #         )
 
-            db.session.add(yoga_class)
-            return yoga_class
+    #         db.session.add(yoga_class)
+    #         return yoga_class
 
 
 def connect_db(app):

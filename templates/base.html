@@ -5,14 +5,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Lunchtime Yoga for Professionals</title>
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css">
   <link rel="stylesheet"
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://unpkg.com/jquery"></script>
   <link rel="stylesheet"
         href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
-  <link href="/static/yoga_js.js">
   <link rel="stylesheet" href="/static/stylesheets/style.css">
+  <link rel="stylesheet" type="text/css" href="/static/calendar/dist/simple-calendar.css" />
 </head>
 
 <body>
@@ -31,16 +31,18 @@
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li><a href="/instructor_access">Instructor Access</a></li>
-      {% if not g.user %}
-      <li><a href="/signup">Sign up</a></li>
-      <li><a href="/login">Log in</a></li>
-      {% else %}
-      <li><a href="/users/detail">Account</a></li>
+      {% if g.user %}
+      <li><a href="/users/detail"><img src="{{ g.user.image_url }}"  alt="Profile Image" id="nav-profile-image"></a></li>
+      <li><a href="/users/detail">{{ g.user.first_name}}</a></li>
       <li><a href="/logout">Log out</a></li>
+      
+      
       {% endif %}
     </ul>
   </div>
 </nav>
+
+
 <div class="container">
 
   {% block content %}
@@ -48,5 +50,7 @@
 
 </div>
 <link href="/static/yoga_js.js">
+<script type="text/javascript" src="/static/calendar/dist/jquery.simple-calendar.js"></script>
+<script type="text/javascript" src="/static/calendar/dist/populate-calendar.js"></script>
 </body>
 </html>

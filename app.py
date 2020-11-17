@@ -8,6 +8,7 @@ from forms import *
 import email_validator
 
 CURR_USER_KEY = "curr_user"
+CURR_INSTRUCTOR_KEY = "curr_instructor"
 
 app = Flask(__name__)
 
@@ -34,14 +35,22 @@ def add_user_to_g():
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
 
+    elif CURR_INSTRUCTOR_KEY in session:
+        g.user = Instructor.query.get(session[CURR_INSTRUCTOR_KEY])
+
     else:
         g.user = None
 
 
-def do_login(user):
+def do_user_login(user):
     """Log in user."""
 
     session[CURR_USER_KEY] = user.id
+
+def do_instructor_login(instructor):
+    """Log in user."""
+
+    session[CURR_INSTRUCTOR_KEY] = instructor.id
 
 
 def do_logout():
@@ -50,12 +59,33 @@ def do_logout():
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
+    if CURR_INSTRUCTOR_KEY in session:
+        del session[CURR_INSTRUCTOR_KEY]
 
-@app.route('/')
+
+@app.route('/', methods=["GET", "POST"])
 def homepage():
     """Show homepage: """
+    form = LoginForm()
 
-    return render_template('home_no_user.html')
+    if form.validate_on_submit():
+        user = User.authenticate(form.username.data,
+                                 form.password.data)
+        instructor = Instructor.authenticate(form.username.data, form.password.data)
+
+        if user:
+            do_user_login(user)
+            flash(f"Hello, {user.username}!", "success")
+            return redirect("/")
+
+        if instructor:
+            do_instructor_login(instructor)
+            flash(f"Hello, {instructor.username}!", "success")
+            return redirect("/")
+
+        flash("Invalid credentials.", 'danger')
+
+    return render_template('home.html', form=form)
 
 
 @app.route('/signup', methods=["GET", "POST"])
@@ -63,6 +93,9 @@ def signup():
     """    """
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
+
+    if CURR_INSTRUCTOR_KEY in session:
+        del session[CURR_INSTRUCTOR_KEY]
 
     form = UserAddForm()
 
@@ -82,7 +115,7 @@ def signup():
             flash("Username already taken", 'danger')
             return render_template('users/signup.html', form=form)
 
-        do_login(user)
+        do_user_login(user)
 
         return redirect("/")
 
@@ -98,15 +131,15 @@ def login():
     if form.validate_on_submit():
         user = User.authenticate(form.username.data,
                                  form.password.data)
-        instructor = Instructors.authenticate(form.username.data, form.password.data)
+        instructor = Instructor.authenticate(form.username.data, form.password.data)
 
         if user:
-            do_login(user)
+            do_user_login(user)
             flash(f"Hello, {user.username}!", "success")
             return redirect("/")
 
         if instructor:
-            do_login(instructor)
+            do_instructor_login(instructor)
             flash(f"Hello, {instructor.username}!", "success")
             return redirect("/")
 
@@ -143,14 +176,14 @@ def edit_profile():
 # def view_classes():
 #     """view/signup for available yoga classes using API"""
 
-#     instructors = Instructors.query.all()
+#     instructor = Instructor.query.all()
 #     classes = Classes.query.all()
 
 #     if not g.user:
 #         user = g.user
 
 
-#     return render_template('classes.html', user=user, classes=classes, instructors=instructors)
+#     return render_template('classes.html', user=user, classes=classes, instructor=instructor)
 
 ################################ INSTRUCTOR ACCESS ########################
 
@@ -165,17 +198,21 @@ def instructor_signup():
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
+
+    if CURR_INSTRUCTOR_KEY in session:
+        del session[CURR_INSTRUCTOR_KEY]
+
     form = UserAddForm()
 
     if form.validate_on_submit():
         try:
-            instructor = Instructors.instructor_signup(
+            instructor = Instructor.instructor_signup(
                 username=form.username.data,
                 password=form.password.data,
                 email=form.email.data,
                 first_name=form.first_name.data,
                 last_name=form.last_name.data,
-                image_url=form.image_url.data or Instructors.image_url.default.arg,
+                image_url=form.image_url.data or Instructor.image_url.default.arg,
             )
             db.session.commit()
 
@@ -183,7 +220,7 @@ def instructor_signup():
             flash("Username already taken", 'danger')
             return render_template('instructor_access/index.html', form=form)
 
-        do_login(instructor)
+        do_instructor_login(instructor)
 
         return redirect("/instructor_access")
 
@@ -193,11 +230,19 @@ def instructor_signup():
 @app.route('/instructor_access/add_class', methods=["GET", "POST"])
 def add_class():
     """view/signup for available yoga classes using API"""
+    if (not g.user) or (CURR_INSTRUCTOR_KEY not in session) :
+        flash("Access unauthorized.", "danger")
+        return redirect("/instructor_access")
+
     form = ClassAddForm()
 
     if form.validate_on_submit():
-        yoga_class = Classes.create_class(
-            instructor=form.instructor.data)
+        yoga_class = Classes(
+            instructor=form.instructor.data,
+            location=form.location.data,
+            start_date_time=form.start_date_time.data,
+            end_date_time=form.end_date_time.data,
+            )
 
         db.session.add(yoga_class)
         db.session.commit()
