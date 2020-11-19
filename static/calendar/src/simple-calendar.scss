@@ -122,13 +122,8 @@ $green: #8BBF43;
     &.has-event {
       &:after {
         content: '';
-        position: absolute;
-        top: calc(50% + .6em);
-        left: calc(50% - 2px);
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
         background: $blue;
+        color: white;
       }
     }
 

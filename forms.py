@@ -15,6 +15,8 @@ class ClassAddForm(FlaskForm):
     instructor = QuerySelectField(query_factory=choice_query, allow_blank=True, get_label='first_name', blank_text='(Instructor)')
     location = StringField('Location', validators=[DataRequired()])
     start_date_time = DateTimeLocalField('Class Start', format='%Y-%m-%dT%H:%M', validators=[DataRequired()])
+    end_date_time = DateTimeLocalField('Class End', format='%Y-%m-%dT%H:%M', validators=[DataRequired()])
+
 
 class UserAddForm(FlaskForm):
     """Form for adding users."""

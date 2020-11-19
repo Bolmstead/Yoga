@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, flash, redirect, session, g, abort , url_for, jsonify 
+from flask import Flask, render_template, request, flash, redirect, session, g, abort , url_for, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
@@ -121,7 +121,6 @@ def signup():
 
     return render_template('users/signup.html', form=form)
 
-
 @app.route('/login', methods=["GET", "POST"])
 def login():
     """Handle user login."""
@@ -200,15 +199,17 @@ def instructor_signup():
     form = UserAddForm()
 
     if form.validate_on_submit():
+        hashed_pwd = bcrypt.generate_password_hash(form.password.data).decode('UTF-8')
         try:
-            instructor = Instructor.instructor_signup(
+            instructor = Instructor(
                 username=form.username.data,
-                password=form.password.data,
+                password=hashed_pwd,
                 email=form.email.data,
                 first_name=form.first_name.data,
                 last_name=form.last_name.data,
                 image_url=form.image_url.data or Instructor.image_url.default.arg,
             )
+            db.session.add(instructor)
             db.session.commit()
 
         except IntegrityError as e:
@@ -236,6 +237,7 @@ def add_class():
             instructor=form.instructor.data,
             location=form.location.data,
             start_date_time=form.start_date_time.data,
+            end_date_time=form.end_date_time.data,
             )
 
         db.session.add(yoga_class)

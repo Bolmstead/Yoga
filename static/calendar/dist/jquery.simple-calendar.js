@@ -197,9 +197,10 @@
         var endDate = new Date(event.endDate);
         var $event = $('' +
           '<div class="event">' +
-          ' <div class="event-hour">' + startDate.getHours() + ':' + (startDate.getMinutes() < 10 ? '0' : '') + startDate.getMinutes() + '</div>' +
+          ' <div class="event-hour">' + startDate.getHours() + ':' + (startDate.getMinutes() < 10 ? '0' : '') + startDate.getMinutes() + 
+                                        endDate.getHours() + ':' + (endDate.getMinutes() < 10 ? '0' : '') + endDate.getMinutes()'</div>' +
           ' <div class="event-date">' + plugin.formatDateEvent(startDate, endDate) + '</div>' +
-          ' <div class="event-summary">' + event.summary + '</div>' +
+          ' <div class="event-summary">' + event.summary + '<button type="button" class="btn btn-success btn-sm">Sign Up</button>' +
           '</div>');
 
         $event.data( 'event', event );
@@ -267,7 +268,7 @@
     },
     formatDateEvent: function (dateStart, dateEnd) {
       var formatted = '';
-      formatted += this.settings.days[dateStart.getDay()] + ' - ' + dateStart.getDate() + ' ' + this.settings.months[dateStart.getMonth()].substring(0, 3);
+      formatted += this.settings.days[dateStart.getDay()] + ' - ' + this.settings.months[dateStart.getMonth()] + ' ' +dateStart.getDate();
 
       if (dateEnd.getDate() !== dateStart.getDate()) {
         formatted += ' to ' + dateEnd.getDate() + ' ' + this.settings.months[dateEnd.getMonth()].substring(0, 3)
@@ -287,9 +288,4 @@
   };
 
 })(jQuery, window, document);
-
-
-$(document).ready(function(){
-  $("#calendar").simpleCalendar();
-});
 

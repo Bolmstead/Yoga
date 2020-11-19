@@ -198,6 +198,10 @@ class Classes(db.Model):
         db.DateTime,
     )
 
+    end_date_time = db.Column(
+        db.DateTime,
+    )
+
     class_users = db.Column(
         db.Integer,
         db.ForeignKey('users.id', ondelete="cascade"),
@@ -210,6 +214,7 @@ class Classes(db.Model):
             "class_instructor": self.class_instructor,
             "location": self.location,
             "start_date_time": self.start_date_time,
+            "end_date_time": self.end_date_time,
         }
     # @classmethod
     # def create_class(cls, instructor, location, date):
