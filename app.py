@@ -29,28 +29,27 @@ toolbar = DebugToolbarExtension(app)
 
 ##############################################################################
 @app.before_request
-def add_user_to_g():
+def add_to_g():
     """If we're logged in, add curr user to Flask global."""
 
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
 
     elif CURR_INSTRUCTOR_KEY in session:
-        g.user = Instructor.query.get(session[CURR_INSTRUCTOR_KEY])
-
-    else:
-        g.user = None
+        g.instructor = Instructor.query.get(session[CURR_INSTRUCTOR_KEY])
 
 
 def do_user_login(user):
     """Log in user."""
 
     session[CURR_USER_KEY] = user.id
+    add_to_g()
 
 def do_instructor_login(instructor):
     """Log in user."""
 
     session[CURR_INSTRUCTOR_KEY] = instructor.id
+    add_to_g()
 
 
 def do_logout():
@@ -69,18 +68,18 @@ def homepage():
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = User.authenticate(form.username.data,
+        user = User.authenticate(form.email.data,
                                  form.password.data)
-        instructor = Instructor.authenticate(form.username.data, form.password.data)
+        instructor = Instructor.authenticate(form.email.data, form.password.data)
 
         if user:
             do_user_login(user)
-            flash(f"Hello, {user.username}!", "success")
+            flash(f"Hello, {user.first_name}!", "success")
             return redirect("/")
 
         if instructor:
             do_instructor_login(instructor)
-            flash(f"Hello, {instructor.username}!", "success")
+            flash(f"Hello, instructor {instructor.first_name}!", "success")
             return redirect("/")
 
         flash("Invalid credentials.", 'danger')
@@ -91,18 +90,13 @@ def homepage():
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
     """    """
-    if CURR_USER_KEY in session:
-        del session[CURR_USER_KEY]
-
-    if CURR_INSTRUCTOR_KEY in session:
-        del session[CURR_INSTRUCTOR_KEY]
+    do_logout()
 
     form = UserAddForm()
 
     if form.validate_on_submit():
         try:
             user = User.signup(
-                username=form.username.data,
                 password=form.password.data,
                 email=form.email.data,
                 first_name=form.first_name.data,
@@ -112,7 +106,7 @@ def signup():
             db.session.commit()
 
         except IntegrityError as e:
-            flash("Username already taken", 'danger')
+            flash("Email already taken", 'danger')
             return render_template('users/signup.html', form=form)
 
         do_user_login(user)
@@ -128,18 +122,18 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = User.authenticate(form.username.data,
+        user = User.authenticate(form.email.data,
                                  form.password.data)
-        instructor = Instructor.authenticate(form.username.data, form.password.data)
+        instructor = Instructor.authenticate(form.email.data, form.password.data)
 
         if user:
             do_user_login(user)
-            flash(f"Hello, {user.username}!", "success")
+            flash(f"Hello, {user.first_name}!", "success")
             return redirect("/")
 
         if instructor:
             do_instructor_login(instructor)
-            flash(f"Hello, {instructor.username}!", "success")
+            flash(f"Hello, instructor {instructor.first_name}!", "success")
             return redirect("/")
 
         flash("Invalid credentials.", 'danger')
@@ -179,22 +173,70 @@ def display_json():
 
     return jsonify(serialized_classes)
 
+@app.route('/classes/signup/<int:class_id>', methods=["POST"])
+def class_signup(class_id):
+
+    if not g.user or g.instructor:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    yoga_class = Classes.query.get_or_404(class_id)
+    user = g.user
+
+    try: 
+        signup = Signups(
+        user_id=user.id,
+        class_id=yoga_class.id,)
+
+    except IntegrityError as e:
+        flash("You have already registered for this class", 'danger')
+        return redirect("/")
+    
+    db.session.add(signup)
+    db.session.commit()
+
+    flash("You have signed up!", "success")
+    return redirect("/")
+
+# @app.route('/classes/cancel_signup/<int:class_id>', methods=["DELETE"])
+# def delete_user(class_id):
+#     """Delete user."""
+
+#     if not g.user:
+#         flash("Access unauthorized.", "danger")
+#         return redirect("/")
+
+#     signup = Signups.query.get_or_404(primary_key)
+
+#     db.session.delete(signup)
+#     db.session.commit()
+
+#     return redirect("/signup")
+
+@app.route('/classes/delete/<int:class_id>', methods=["POST"])
+def delete_class(class_id):
+    """Delete class."""
+
+    if g.instructor:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+        Classes.query.get_or_404(class_id).delete()
+        db.session.commit()
+
+    else:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    return redirect("/")
+
 ################################ INSTRUCTOR ACCESS ########################
-
-@app.route('/instructor_access')
-def view_classes():
-
-    return render_template('instructor_access/index.html')
 
 @app.route('/instructor_access/signup', methods=["GET", "POST"])
 def instructor_signup():
     """view/signup for available yoga classes using API"""
 
-    if CURR_USER_KEY in session:
-        del session[CURR_USER_KEY]
-
-    if CURR_INSTRUCTOR_KEY in session:
-        del session[CURR_INSTRUCTOR_KEY]
+    do_logout()
 
     form = UserAddForm()
 
@@ -202,7 +244,6 @@ def instructor_signup():
         hashed_pwd = bcrypt.generate_password_hash(form.password.data).decode('UTF-8')
         try:
             instructor = Instructor(
-                username=form.username.data,
                 password=hashed_pwd,
                 email=form.email.data,
                 first_name=form.first_name.data,
@@ -213,12 +254,12 @@ def instructor_signup():
             db.session.commit()
 
         except IntegrityError as e:
-            flash("Username already taken", 'danger')
+            flash("Email already taken", 'danger')
             return render_template('instructor_access/index.html', form=form)
 
         do_instructor_login(instructor)
 
-        return redirect("/instructor_access")
+        return redirect("/")
 
 
     return render_template('instructor_access/signup.html',form=form)
@@ -226,13 +267,14 @@ def instructor_signup():
 @app.route('/instructor_access/add_class', methods=["GET", "POST"])
 def add_class():
     """view/signup for available yoga classes using API"""
-    if (not g.user) or (CURR_INSTRUCTOR_KEY not in session) :
+    if not g.instructor:
         flash("Access unauthorized.", "danger")
-        return redirect("/instructor_access")
+        return redirect("/")
 
     form = ClassAddForm()
 
     if form.validate_on_submit():
+    
         yoga_class = Classes(
             instructor=form.instructor.data,
             location=form.location.data,
@@ -243,51 +285,29 @@ def add_class():
         db.session.add(yoga_class)
         db.session.commit()
 
-        return redirect("/instructor_access")
+        flash("Class created", "success")
+        return redirect("/instructor_access/detail")
 
 
     return render_template('instructor_access/add_class.html', form=form)
 
-# @app.route('/users/delete', methods=["POST"])
-# def delete_user():
-#     """Delete user."""
+@app.route('/instructor_access/detail', methods=["GET", "POST"])
+def view_instructor():
+    """Update profile for current user."""
 
-#     if not g.user:
-#         flash("Access unauthorized.", "danger")
-#         return redirect("/")
+    if not g.instructor:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
-#     do_logout()
+    instructor = g.instructor
 
-#     db.session.delete(g.user)
-#     db.session.commit()
-
-#     return redirect("/signup")
+    return render_template('instructor_access/detail.html', instructor=instructor)
 
 
-# ##############################################################################
-# # Homepage and error pages
+##################Homepage and error pages#####################################
 
+@app.errorhandler(404)
+def page_not_found(e):
+    """404 NOT FOUND page."""
 
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     """404 NOT FOUND page."""
-
-#     return render_template('404.html'), 404
-
-
-# ##############################################################################
-# # Turn off all caching in Flask
-# #   (useful for dev; in production, this kind of stuff is typically
-# #   handled elsewhere)
-# #
-# # https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
-
-# @app.after_request
-# def add_header(req):
-#     """Add non-caching headers on every request."""
-
-#     req.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-#     req.headers["Pragma"] = "no-cache"
-#     req.headers["Expires"] = "0"
-#     req.headers['Cache-Control'] = 'public, max-age=0'
-#     return req
+    return render_template('404.html'), 404

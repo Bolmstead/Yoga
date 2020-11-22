@@ -5,7 +5,19 @@
       <h1 class="display-4 font-weight-normal">Lunchtime Yoga for Professionals</h1>
       <p class="lead font-weight-normal">This is the homepage for the yoga website.</p>
 
-      {% if not g.user %}
+      {% if g.user %}
+      <br><div class="col-md-5 order-md-1 mx-auto">
+        <img src="{{ g.user.image_url }}" alt="Profile Image" id="profile-image">
+      </div>
+      <p class="lead font-weight-normal">Hi, {{ g.user.first_name }}</p>
+
+      {% elif g.instructor %}
+      <br><div class="col-md-5 order-md-1 mx-auto">
+        <img src="{{ g.instructor.image_url }}" alt="Profile Image" id="profile-image">
+      </div>
+      <p class="lead font-weight-normal">Hi, {{ g.instructor.first_name }}</p>
+
+      {% else %}
       <div class="row justify-content-sm-center">
         <div class="col-md-7 col-lg-5">
           <form method="POST" id="user_form">
@@ -21,14 +33,11 @@
             <button class="btn btn-primary btn-lg btn-block">Log in</button>
             <p class="lead font-weight-normal">or</p>
             <a href="/signup" class="btn btn-success btn-lg btn-block">Sign up</a>
+            <a href="/instructor_access/signup" class="btn btn-success btn-lg btn-block">Instructor Sign up</a>
           </form>
         </div>
       </div>
-      {% else %}
-      <br><div class="col-md-5 order-md-1 mx-auto">
-        <img src="{{ g.user.image_url }}" alt="Profile Image" id="profile-image">
-      </div>
-      <p class="lead font-weight-normal">Hi, {{ g.user.first_name }}</p>
+
       {% endif %}
     </div>
   </div>

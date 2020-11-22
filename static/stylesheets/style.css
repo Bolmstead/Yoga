@@ -7,6 +7,9 @@ body {
 	font-family: 'Open Sans', sans-serif;
 }
 
+html {
+	scroll-behavior: smooth;
+  }
 
 .form-control {
 	margin-bottom: 20px;

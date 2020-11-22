@@ -71,15 +71,20 @@
       background: #6691CC;
       color: white; }
       .calendar .day.today.has-event:after {
-        background: #6691CC;
-        color: white;  }
+        background: white; }
     .calendar .day.wrong-month {
       color: #CBD1D2; }
     .calendar .day.wrong-month:hover {
       border: 2px solid transparent; }
     .calendar .day.has-event:after {
-      background: #6691CC;
-      border-radius: 50%;}
+      content: '';
+      position: absolute;
+      top: calc(50% + .6em);
+      left: calc(50% - 2px);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #6691CC; }
     .calendar .day.disabled {
       cursor: default; }
       .calendar .day.disabled:hover {

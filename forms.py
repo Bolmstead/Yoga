@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, TextAreaField, SelectField, Date
 from wtforms.validators import DataRequired, Email, Length
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from models import *
-from wtforms.fields.html5 import DateTimeLocalField
+from wtforms.fields.html5 import DateTimeLocalField, DateField, TimeField
 
 
 def choice_query():
@@ -18,23 +18,22 @@ class ClassAddForm(FlaskForm):
     end_date_time = DateTimeLocalField('Class End', format='%Y-%m-%dT%H:%M', validators=[DataRequired()])
 
 
+
 class UserAddForm(FlaskForm):
     """Form for adding users."""
 
-    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('E-mail', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[Length(min=7)])
     first_name = StringField('First Name',validators=[DataRequired()])
     last_name = StringField('Last Name',validators=[DataRequired()])
-    email = StringField('E-mail', validators=[DataRequired(), Email()])
     image_url = StringField('(Optional) Image URL')
 
 class InstructorAddForm(FlaskForm):
     """Form for adding users."""
 
-    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('E-mail', validators=[DataRequired(), Email()])
     first_name = StringField('First Name',validators=[DataRequired()])
     last_name = StringField('Last Name',validators=[DataRequired()])
-    email = StringField('E-mail', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[Length(min=7)])
     image_url = StringField('(Optional) Image URL')
 
@@ -42,7 +41,6 @@ class InstructorAddForm(FlaskForm):
 class UserEditForm(FlaskForm):
     """Form for editing users."""
 
-    username = StringField('Username', validators=[DataRequired()])
     email = StringField('E-mail', validators=[DataRequired(), Email()])
     image_url = StringField('(Optional) Image URL')
     password = PasswordField('Password', validators=[Length(min=6)])
@@ -51,8 +49,9 @@ class UserEditForm(FlaskForm):
 class LoginForm(FlaskForm):
     """Login form."""
 
-    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('E-mail', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=7), DataRequired()])
+
 
 
 ################### QUESTIONS ######################################

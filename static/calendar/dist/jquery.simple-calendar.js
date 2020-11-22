@@ -195,13 +195,18 @@
       events.forEach(function (event) {
         var startDate = new Date(event.startDate);
         var endDate = new Date(event.endDate);
-        var $event = $('' +
-          '<div class="event">' +
-          ' <div class="event-hour">' + startDate.getHours() + ':' + (startDate.getMinutes() < 10 ? '0' : '') + startDate.getMinutes() + 
-                                        endDate.getHours() + ':' + (endDate.getMinutes() < 10 ? '0' : '') + endDate.getMinutes()'</div>' +
+
+        const startTime = startDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        const endTime = endDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        
+
+        var $event = $('' + '<form method="POST" action="/classes/signup/' + event.classId + 
+        '"><div class="event"><div class="event-hour">'+ startTime + '<span>  -  </span>' + endTime +'</div>' +
           ' <div class="event-date">' + plugin.formatDateEvent(startDate, endDate) + '</div>' +
-          ' <div class="event-summary">' + event.summary + '<button type="button" class="btn btn-success btn-sm">Sign Up</button>' +
-          '</div>');
+          ' <div class="event-summary">' + '<span>Yoga by </span>'+ event.instructor + '<span> at </span>' + event.location + 
+          '<form method="POST" action="/classes/signup/' + event.classId + 
+          '"> <div class="event-hour"><button type="submit" class="btn btn-light btn-sm active">Sign up!</button></form>' 
+          + '</div></div>' + '</div>');
 
         $event.data( 'event', event );
         $event.click( plugin.settings.onEventSelect );
@@ -268,7 +273,7 @@
     },
     formatDateEvent: function (dateStart, dateEnd) {
       var formatted = '';
-      formatted += this.settings.days[dateStart.getDay()] + ' - ' + this.settings.months[dateStart.getMonth()] + ' ' +dateStart.getDate();
+      formatted += this.settings.days[dateStart.getDay()] + ' - ' + dateStart.getDate() + ' ' + this.settings.months[dateStart.getMonth()].substring(0, 3);
 
       if (dateEnd.getDate() !== dateStart.getDate()) {
         formatted += ' to ' + dateEnd.getDate() + ' ' + this.settings.months[dateEnd.getMonth()].substring(0, 3)
@@ -288,4 +293,3 @@
   };
 
 })(jQuery, window, document);
-

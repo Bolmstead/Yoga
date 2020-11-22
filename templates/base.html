@@ -5,15 +5,20 @@
 <head>
   <meta charset="UTF-8">
   <title>Lunchtime Yoga for Professionals</title>
-    <link rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://unpkg.com/axios/dist/axios.js"></script>
-  <script src="https://unpkg.com/jquery"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
-  <link rel="stylesheet"
-        href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
-  <link rel="stylesheet" href="/static/stylesheets/style.css">
-  <link rel="stylesheet" type="text/css" href="/static/calendar/dist/simple-calendar.css" />
+
+    <!-- CSS Bootstrap, Axios, jQuery, fontawesome, css -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/stylesheets/style.css">
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <script src="https://unpkg.com/jquery"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+
+    <!-- Calendar css -->
+    <link rel="stylesheet" type="text/css" href="/static/calendar/dist/simple-calendar.css" />
+
+    <!-- Bootstrap Javascript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
+
 </head>
 
 <body>
@@ -26,24 +31,34 @@
       </div>
       <ul class="nav navbar-nav">
         <li><a href="/">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#calendar_jump">Classes</a></li>
-        <li><a href="#contact_jump">Contact</a></li>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#calendar_jump">Classes</a></li>
+        <li><a href="/#contact_jump">Contact</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if g.user %}
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="{{ g.user.image_url}}" alt="Profile Image" id="nav-profile-image">  {{ g.user.first_name}}  
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  {{ g.user.first_name}}  
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/instructor_access">Instructor Access</a>
-            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/users/detail">Account</a>
+            <!-- <div class="dropdown-divider"></div> -->
             <a class="dropdown-item" href="/logout">Log Out</a>
           </div>
         </li>
-        {% else %}
-        <a class="dropdown-item" href="/instructor_access">Instructor Access</a>
+        {% elif g.instructor %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  {{ g.instructor.first_name}}  
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/instructor_access/detail">Instructor Account</a>
+            
+            <!-- <div class="dropdown-divider"></div> -->
+            <a class="dropdown-item" href="/logout">Log Out</a>
+          </div>
+        </li>
         {% endif %}
       </ul>
     </div>
@@ -51,68 +66,69 @@
 
 
 <div class="container">
-
   {% block content %}
   {% endblock %}
-
 </div>
+
+
+<!-- Calendar Javascript -->
 <script type="text/javascript" src="/static/calendar/dist/jquery.simple-calendar.js"></script>
-<!-- <script type="text/javascript" src="/static/calendar/dist/populate-calendar.js"></script> -->
+
+
+<!-- JS code to populate calendar -->
 <script>
+  const yogaClasses = [];
+  async function getClasses() {
+      // save results from JSON get request to variable and iterate through each item
+      const res = await axios.get('http://localhost:5000/json');
+      for (let t of res.data) {
+        // change time to MST to avoid converstion by adding to end of date string
+        const startTimeToMst = t.start_date_time + ("-0700");
+        const endTimeToMst = t.end_date_time + ("-0700");
+        // create new date object using the MST date string
+        const startDateObj = new Date(startTimeToMst);
+        const endDateObj = new Date(endTimeToMst);
 
-const yogaClasses = [];
-
-async function getClasses() {
-    // save results from JSON get request to variable and iterate through each item
-    const res = await axios.get('http://localhost:5000/json');
-    for (let t of res.data) {
-      // change time to MST to avoid converstion by adding to end of date string
-      const startTimeToMst = t.start_date_time + ("-0700");
-      const endTimeToMst = t.end_date_time + ("-0700");
-      // create new date object using the MST date string
-      const startDateObj = new Date(startTimeToMst);
-      const endDateObj = new Date(endTimeToMst);
-
-      const yogaInstructor = t.class_instructor;
-      const location = t.location;
-
-      const eventObj = { startDate: startDateObj, 
-                         endDate: endDateObj, 
-                         summary: `Instructor: ${yogaInstructor}  location:  ${location} aasd;flkajsdf;oiasdf asdfasdofhwelkn wef asdfwe `
-      };
-      yogaClasses.push(eventObj)
-      console.log(yogaClasses)
-    }}
-
-getClasses();
-      // calendar coder's instructions to create event in calendar
-  $("#calendar").simpleCalendar({
- 
-          // displays events
-          displayEvents:true,
-
-          // event dates
-          events:yogaClasses,
-
-          // disable showing event details
-          disableEventDetails:false,
-
-          // disable showing empty date details
-          disableEmptyDetails:false
-          });
+        const eventObj = { startDate: startDateObj, 
+                          endDate: endDateObj, 
+                          instructor: t.class_instructor,
+                          location: t.location,
+                          classId: t.id, 
+        };
+        yogaClasses.push(eventObj)
+        console.log(yogaClasses)
+      }}
 
 
+  getClasses();
+        // calendar coder's instructions to create events in calendar
+    $("#calendar").simpleCalendar({
+  
+            // displays events
+            displayEvents:true,
 
-$(document).ready(function(){
-  $("#calendar").simpleCalendar();
-});
-// functions created to correct classes not initially displayed on calendar
-setTimeout(function(){ $(".btn-next").click()}, 100);
-$(".btn-prev").click();
+            // event dates
+            events:yogaClasses,
+
+            // disable showing event details
+            disableEventDetails:false,
+
+            // disable showing empty date details
+            disableEmptyDetails:false
+            });
 
 
-document.addEventListener("click", function(e){console.dir(e.target)});
-document.addEventListener("click", function(e){console.dir(e.target.dataset.date.)});
+// Initialize Calendar
+  $(document).ready(function(){
+    $("#calendar").simpleCalendar();
+  });
+
+  // functions created to correct classes not initially displayed on calendar
+  setTimeout(function(){ $(".btn-next").click()}, 100);
+  $(".btn-prev").click();
+
+
+  document.addEventListener("click", function(e){console.dir(e.target)});
 </script>
 </body>
 </html>
