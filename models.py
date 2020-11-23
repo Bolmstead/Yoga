@@ -1,5 +1,4 @@
 from datetime import datetime, date, time
-
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 
@@ -7,14 +6,15 @@ bcrypt = Bcrypt()
 db = SQLAlchemy()
 
 
-
 class Signups(db.Model):
-    """Table created to produce the many-to-many relationship between the tables 'users' and 'classes'"""
+    """Class to establish the many-to-many relationship between the tables 'users' and 'classes'
+    for when a user signs up for a class"""
 
     __tablename__ = 'signups'
 
     user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
     class_id = db.Column('class_id', db.Integer, db.ForeignKey('classes.id'), primary_key=True)
+
 
 class User(db.Model):
     """User in the system."""
@@ -47,14 +47,11 @@ class User(db.Model):
         db.session.add(user)
         return user
 
-    # def __repr__(self):
-    #     return f"<User #{self.id}: {self.email}>"
 
     @classmethod
     def authenticate(cls, email, password):
-        """Find user with `email` and `password`.
-        If can't find matching user (or if password is wrong), returns False.
-        """
+        """Find user with `email` and `password` combination.
+        If can't find matching user (or if password is invalid), returns False."""
 
         user = cls.query.filter_by(email=email).first()
 
@@ -66,9 +63,8 @@ class User(db.Model):
         return False
 
 
-
 class Instructor(db.Model):
-    """An individual message ("warble")."""
+    """Instructor in the system"""
     
     __tablename__ = 'instructors'
 
@@ -81,15 +77,9 @@ class Instructor(db.Model):
 
     classes = db.relationship('Classes', backref='instructor')
 
-    def __repr__(self):
-        return '<Instructor {}>'.format(self.first_name)
-
     @classmethod
     def instructor_signup(cls, first_name, last_name, email, password, image_url):
-        """Sign up user.
-
-        Hashes password and adds user to system.
-        """
+        """Sign up user. Hashes password and adds user to system."""
 
         hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
 
@@ -106,9 +96,8 @@ class Instructor(db.Model):
 
     @classmethod
     def authenticate(cls, email, password):
-        """Find user with `email` and `password`.
-        If can't find matching user (or if password is wrong), returns False.
-        """
+        """Find instructor with `email` and `password`. If can't find matching user 
+        (or if password is invalid), returns False."""
 
         instructor = cls.query.filter_by(email=email).first()
 
@@ -119,8 +108,9 @@ class Instructor(db.Model):
 
         return False
 
+
 class Classes(db.Model):
-    """Connection of a follower <-> followed_user."""
+    """Yoga Class Model"""
 
     __tablename__ = 'classes'
 
@@ -141,20 +131,7 @@ class Classes(db.Model):
             "end_date_time": self.end_date_time,
         }
 
-    def readable_dates(self):
-        """Change Classes dates object to something readable"""
-        return {
-            date: self.start_date_time(strftime, '%b %d, %Y')
-            # time: self.start_date_time + "-" + 
-        }
-
-
-
 def connect_db(app):
-    """Connect this database to provided Flask app.
-
-    You should call this in your Flask app.
-    """
-
+    """Connect this database to provided Yoga Website."""
     db.app = app
     db.init_app(app)

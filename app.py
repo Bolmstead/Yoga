@@ -1,22 +1,21 @@
 import os
-
 from flask import Flask, render_template, request, flash, redirect, session, g, abort , url_for, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
+# Import API libraries
 from twilio.rest import Client 
 import sendgrid
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
+#Import forms.py and email validator
 from forms import *
 import email_validator
 
 CURR_USER_KEY = "curr_user"
 CURR_INSTRUCTOR_KEY = "curr_instructor"
-
 SENDGRID_API_KEY = "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"
-
 
 app = Flask(__name__)
 
@@ -34,7 +33,7 @@ db.create_all()
 
 toolbar = DebugToolbarExtension(app)
 
-## API stuff
+## Email API initialization
 account_sid = 'AC61fba0a85692bf29f107b606ce31b6cc' 
 auth_token = '[AuthToken]' 
 client = Client(account_sid, auth_token) 
@@ -44,7 +43,7 @@ message = sendgrid.Mail()
 ##############################################################################
 @app.before_request
 def add_to_g():
-    """If we're logged in, add curr user to Flask global."""
+    """If we're logged in, add curr user and curr instructor to Flask global."""
 
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
@@ -60,7 +59,7 @@ def do_user_login(user):
     add_to_g()
 
 def do_instructor_login(instructor):
-    """Log in user."""
+    """Log in instructor."""
 
     session[CURR_INSTRUCTOR_KEY] = instructor.id
     add_to_g()
@@ -81,17 +80,20 @@ def homepage():
     """Show homepage: """
     form = LoginForm()
 
-
+    # If post method and validated save either user or instructor to variable
+    # using the each class's authenticate method
     if form.validate_on_submit():
         user = User.authenticate(form.email.data,
                                  form.password.data)
         instructor = Instructor.authenticate(form.email.data, form.password.data)
-
+       
+        # if can authenticate user, login the user
         if user:
             do_user_login(user)
             flash(f"You have logged in!", "success")
             return redirect("/")
-
+        
+        # if can authenticate instructor, login the instructor
         if instructor:
             do_instructor_login(instructor)
             flash(f"You have logged in as an instructor!", "success")
@@ -99,16 +101,18 @@ def homepage():
 
         flash("Invalid credentials.", 'danger')
 
+    # If get method, show homepage.
     return render_template('home.html', form=form)
 
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
-    """    """
+    """User create account route"""
     do_logout()
 
     form = UserAddForm()
 
+    # If post method and validated, save user instance to database
     if form.validate_on_submit():
         try:
             user = User.signup(
@@ -120,10 +124,12 @@ def signup():
             )
             db.session.commit()
 
+        # If email has already been taken, show error alert
         except IntegrityError as e:
             flash("Email already taken", 'danger')
             return render_template('users/signup.html', form=form)
 
+        # Send email to user to confirm account creation
         message = Mail(
             from_email='olms2074@gmail.com',
             to_emails= form.email.data,
@@ -140,26 +146,27 @@ def signup():
         except Exception as e:
             print(e.message)
 
+        # Login the newly registered user
         do_user_login(user)
 
         return redirect("/")
-
+    # If get method, render the page
     return render_template('users/signup.html', form=form)
 
 
 @app.route('/logout')
 def logout():
-    """Handle logout of user."""
+    """Handle logout of user/instructor."""
 
     do_logout()
-
     flash("You have logged out", 'success')
+
     return redirect("/")
 
 
 @app.route('/users/detail', methods=["GET", "POST"])
 def edit_profile():
-    """Update profile for current user."""
+    """Show information of the logged in user"""
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -173,19 +180,20 @@ def edit_profile():
 
 @app.route('/json')
 def display_json():
-    """view/signup for available yoga classes using API"""
+    """Show JSON of all created classes"""
 
     serialized_classes = [c.serialize() for c in Classes.query.all()]
-
     return jsonify(serialized_classes)
 
 @app.route('/classes/signup/<int:class_id>', methods=["POST"])
 def class_signup(class_id):
+    """User signs up for a yoga class"""
 
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
+    # Grab yoga class from database and save logged in user to variable
     yoga_class = Classes.query.get_or_404(class_id)
     user = g.user
 
@@ -198,6 +206,10 @@ def class_signup(class_id):
         flash("You have already registered for this class", 'danger')
         return redirect("/")
 
+    db.session.add(signup)
+    db.session.commit()
+
+    # Send email to user confirming their class signup
     message = Mail(
         from_email='olms2074@gmail.com',
         to_emails= user.email,
@@ -214,32 +226,12 @@ def class_signup(class_id):
     except Exception as e:
         print(e.message)
     
-    # message = client.messages.create(from_="+16814343687", body=f"Thank you for signing up for {yoga_class.instructor}'s yoga class at {yoga_class.location}! The class starts at {yoga_class.start_date_time}.", to=user.phone) 
-
-    db.session.add(signup)
-    db.session.commit()
-
     flash(f"You have signed up for {yoga_class.class_instructor}'s yoga class on {yoga_class.start_date_time}", "success")
     return redirect("/")
 
-# @app.route('/classes/cancel_signup/<int:class_id>', methods=["DELETE"])
-# def delete_user(class_id):
-#     """Delete user."""
-
-#     if not g.user:
-#         flash("Access unauthorized.", "danger")
-#         return redirect("/")
-
-#     signup = Signups.query.get_or_404(primary_key)
-
-#     db.session.delete(signup)
-#     db.session.commit()
-
-#     return redirect("/signup")
-
 @app.route('/classes/delete/<int:class_id>', methods=["POST"])
 def delete_class(class_id):
-    """Delete class."""
+    """Allow logged in instructor to delete class."""
 
     if g.instructor:
         Classes.query.get_or_404(class_id).delete()
@@ -258,9 +250,9 @@ def instructor_signup():
     """view/signup for available yoga classes using API"""
 
     do_logout()
-
     form = UserAddForm()
 
+    # If post method and validated, create instructor instance and save to database
     if form.validate_on_submit():
         hashed_pwd = bcrypt.generate_password_hash(form.password.data).decode('UTF-8')
         try:
@@ -278,6 +270,7 @@ def instructor_signup():
             flash("Email already taken", 'danger')
             return render_template('instructor_access/signup.html', form=form)
 
+        # Send email to confirm instructor registration
         message = Mail(
             from_email='olms2074@gmail.com',
             to_emails= form.email.data,
@@ -294,11 +287,9 @@ def instructor_signup():
         except Exception as e:
             print(e.message)
 
+        # Login the instructor
         do_instructor_login(instructor)
-
-
         return redirect("/")
-
 
     return render_template('instructor_access/signup.html',form=form)
 
@@ -311,6 +302,7 @@ def add_class():
 
     form = ClassAddForm()
 
+    # If POST method create Classes instance and add to database
     if form.validate_on_submit():
     
         yoga_class = Classes(
@@ -350,21 +342,3 @@ def page_not_found(e):
 
     return render_template('404.html'), 404
 
-
-
-
-##############API TO SEND EMAIL ####################################
-
-# message = Mail(
-#     from_email='olms2074@gmail.com',
-#     to_emails='olmssweeps@gmail.com',
-#     subject='Test Twilio email',
-#     html_content='<strong>Instructor signup completed</strong>')
-# try:
-#     sg = SendGridAPIClient(SENDGRID_API_KEY)
-#     response = sg.send(message)
-#     print(response.status_code)
-#     print(response.body)
-#     print(response.headers)
-# except Exception as e:
-#     print(e.message)
