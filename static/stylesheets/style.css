@@ -180,6 +180,11 @@ nav + .container {
 	max-width: 50px;
 }
 
+.fb-icon{
+	color: gray;
+	font-size: 3em;
+}
+
 /* ===================== User profile */
 
 .join-message {

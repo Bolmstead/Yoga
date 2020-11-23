@@ -5,6 +5,16 @@
       <h1 class="display-4 font-weight-normal">Lunchtime Yoga for Professionals</h1>
       <p class="lead font-weight-normal">This is the homepage for the yoga website.</p>
 
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category,msg in messages %}
+          <div class="alert alert-{{ category }}" role="alert">
+            {{msg}}
+          </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
       {% if g.user %}
       <br><div class="col-md-5 order-md-1 mx-auto">
         <img src="{{ g.user.image_url }}" alt="Profile Image" id="profile-image">
@@ -90,15 +100,24 @@
 
 
 <div class="px-3 pt-md-1 pb-md-10 mx-auto text-center">
-  <h1 class="display-4" id='calendar_jump'>Classes</h1><br>
+  <h1 class="display-4" id='calendar_classes'>Classes</h1><br>
 </div>
 <div id='calendar'></div>
 
 
 <hr class="featurette-divider"><br>
-<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" id="contact_jump">
-  <h1 class="display-4">Contact Info</h1><br>
-  <p class="lead">Email: Phone: Facebook link:</p>
+<div class="container"><h4 class="text-center my-0">Contact</h4>
+  <div class="row" id="contact">
+    <div class="col-sm text-center my-auto mx-auto">
+      <a href="https://www.facebook.com/groups/2569017809890003">
+        <span class="fb-icon"><i class="fab fa-facebook fa-xs"></i></span>
+      </a>
+    </div>
+    <div class="col-sm text-center my-auto mx-auto">
+      <a href="mailto:lisaolmstead@gmail.com"><span>lisaolmstead24@gmail.com</span></a>
+    </div>
+  </div>
 </div>
+
 
 {% endblock %}

@@ -24,16 +24,16 @@
 <body>
   <nav class="navbar navbar-expand">
     <div class="container-fluid">
-      <div class="navbar-header">
-        <a href="/" class="navbar-brand">
+        <ul class="nav navbar-nav navbar-left">
+        <li><a href="/" class="navbar-brand">
           <span>Lunchtime Yoga</span>
-        </a>
-      </div>
+        </a></li>
+      </ul>
       <ul class="nav navbar-nav">
         <li><a href="/">Home</a></li>
         <li><a href="/#about">About</a></li>
-        <li><a href="/#calendar_jump">Classes</a></li>
-        <li><a href="/#contact_jump">Contact</a></li>
+        <li><a href="/#calendar_classes">Classes</a></li>
+        <li><a href="/#contact">Contact</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if g.user %}
@@ -54,7 +54,7 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="/instructor_access/detail">Instructor Account</a>
-            
+
             <!-- <div class="dropdown-divider"></div> -->
             <a class="dropdown-item" href="/logout">Log Out</a>
           </div>

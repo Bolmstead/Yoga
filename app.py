@@ -4,11 +4,19 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
+from twilio.rest import Client 
+import sendgrid
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
 from forms import *
 import email_validator
 
 CURR_USER_KEY = "curr_user"
 CURR_INSTRUCTOR_KEY = "curr_instructor"
+
+SENDGRID_API_KEY = "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"
+
 
 app = Flask(__name__)
 
@@ -26,6 +34,12 @@ db.create_all()
 
 toolbar = DebugToolbarExtension(app)
 
+## API stuff
+account_sid = 'AC61fba0a85692bf29f107b606ce31b6cc' 
+auth_token = '[AuthToken]' 
+client = Client(account_sid, auth_token) 
+
+message = sendgrid.Mail()
 
 ##############################################################################
 @app.before_request
@@ -67,6 +81,7 @@ def homepage():
     """Show homepage: """
     form = LoginForm()
 
+
     if form.validate_on_submit():
         user = User.authenticate(form.email.data,
                                  form.password.data)
@@ -74,12 +89,12 @@ def homepage():
 
         if user:
             do_user_login(user)
-            flash(f"Hello, {user.first_name}!", "success")
+            flash(f"You have logged in!", "success")
             return redirect("/")
 
         if instructor:
             do_instructor_login(instructor)
-            flash(f"Hello, instructor {instructor.first_name}!", "success")
+            flash(f"You have logged in as an instructor!", "success")
             return redirect("/")
 
         flash("Invalid credentials.", 'danger')
@@ -109,36 +124,27 @@ def signup():
             flash("Email already taken", 'danger')
             return render_template('users/signup.html', form=form)
 
+        message = Mail(
+            from_email='olms2074@gmail.com',
+            to_emails= form.email.data,
+            subject='Lunchtime Yoga Account Created',
+            html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To view open yoga classes please go to http://localhost:5000/#calendar_classes")
+
+        try:
+            sg = SendGridAPIClient(SENDGRID_API_KEY)
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+
+        except Exception as e:
+            print(e.message)
+
         do_user_login(user)
 
         return redirect("/")
 
     return render_template('users/signup.html', form=form)
-
-@app.route('/login', methods=["GET", "POST"])
-def login():
-    """Handle user login."""
-
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        user = User.authenticate(form.email.data,
-                                 form.password.data)
-        instructor = Instructor.authenticate(form.email.data, form.password.data)
-
-        if user:
-            do_user_login(user)
-            flash(f"Hello, {user.first_name}!", "success")
-            return redirect("/")
-
-        if instructor:
-            do_instructor_login(instructor)
-            flash(f"Hello, instructor {instructor.first_name}!", "success")
-            return redirect("/")
-
-        flash("Invalid credentials.", 'danger')
-
-    return render_template('users/login.html', form=form)
 
 
 @app.route('/logout')
@@ -176,7 +182,7 @@ def display_json():
 @app.route('/classes/signup/<int:class_id>', methods=["POST"])
 def class_signup(class_id):
 
-    if not g.user or g.instructor:
+    if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
@@ -191,11 +197,29 @@ def class_signup(class_id):
     except IntegrityError as e:
         flash("You have already registered for this class", 'danger')
         return redirect("/")
+
+    message = Mail(
+        from_email='olms2074@gmail.com',
+        to_emails= user.email,
+        subject='Yoga Class Signup Confirmation',
+        html_content=f"You have signed up for {yoga_class.class_instructor}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
+
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+
+    except Exception as e:
+        print(e.message)
     
+    # message = client.messages.create(from_="+16814343687", body=f"Thank you for signing up for {yoga_class.instructor}'s yoga class at {yoga_class.location}! The class starts at {yoga_class.start_date_time}.", to=user.phone) 
+
     db.session.add(signup)
     db.session.commit()
 
-    flash("You have signed up!", "success")
+    flash(f"You have signed up for {yoga_class.class_instructor}'s yoga class on {yoga_class.start_date_time}", "success")
     return redirect("/")
 
 # @app.route('/classes/cancel_signup/<int:class_id>', methods=["DELETE"])
@@ -218,9 +242,6 @@ def delete_class(class_id):
     """Delete class."""
 
     if g.instructor:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
-
         Classes.query.get_or_404(class_id).delete()
         db.session.commit()
 
@@ -255,9 +276,26 @@ def instructor_signup():
 
         except IntegrityError as e:
             flash("Email already taken", 'danger')
-            return render_template('instructor_access/index.html', form=form)
+            return render_template('instructor_access/signup.html', form=form)
+
+        message = Mail(
+            from_email='olms2074@gmail.com',
+            to_emails= form.email.data,
+            subject='Lunchtime Yoga Instructor Account Created',
+            html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To start creating yoga classes please go to http://localhost:5000/instructor_access/detail")
+
+        try:
+            sg = SendGridAPIClient(SENDGRID_API_KEY)
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+
+        except Exception as e:
+            print(e.message)
 
         do_instructor_login(instructor)
+
 
         return redirect("/")
 
@@ -311,3 +349,22 @@ def page_not_found(e):
     """404 NOT FOUND page."""
 
     return render_template('404.html'), 404
+
+
+
+
+##############API TO SEND EMAIL ####################################
+
+# message = Mail(
+#     from_email='olms2074@gmail.com',
+#     to_emails='olmssweeps@gmail.com',
+#     subject='Test Twilio email',
+#     html_content='<strong>Instructor signup completed</strong>')
+# try:
+#     sg = SendGridAPIClient(SENDGRID_API_KEY)
+#     response = sg.send(message)
+#     print(response.status_code)
+#     print(response.body)
+#     print(response.headers)
+# except Exception as e:
+#     print(e.message)
