@@ -13,6 +13,7 @@ from sendgrid.helpers.mail import Mail
 from forms import *
 import email_validator
 
+
 CURR_USER_KEY = "curr_user"
 CURR_INSTRUCTOR_KEY = "curr_instructor"
 SENDGRID_API_KEY = "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"
@@ -26,6 +27,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = "warrior3ishard"
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+# Heroku
+app.config['SQLALCHEMY_DATABSE_URI'] = os.environ.get('DATABASE_URL', 'postgres:///yoga')
 
 connect_db(app)
 db.drop_all()
