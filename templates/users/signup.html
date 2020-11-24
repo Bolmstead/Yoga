@@ -24,6 +24,9 @@
           {% for error in field.errors %}
             <span class="text-danger">{{ error }}</span>
           {% endfor %}
+          {% if field.id == 'is_instructor' %}
+            {{ field.label }} 
+          {% endif %}
           {{ field(placeholder=field.label.text, class="form-control") }}
         {% endfor %}
   

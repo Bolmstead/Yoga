@@ -31,6 +31,16 @@
 
 
 
+############# Code to pull up instructors names as select field
+
+# function to get instructor's first name for the ClassAddForm
+# def choice_query():
+#     return User.query
+
+# class ClassAddForm(FlaskForm):
+#     """Form for adding or editing classes."""
+#     instructor = QuerySelectField(query_factory=choice_query, allow_blank=True, get_label='first_name', blank_text='(Instructor)')
+   
 
 
 
@@ -68,3 +78,5 @@
 ### NOTES ###
 
 # Twilio Phone Number is +16814343687
+
+# https://pypi.org/project/pytz/   website to figure out timezones

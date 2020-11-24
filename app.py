@@ -15,7 +15,6 @@ import email_validator
 
 
 CURR_USER_KEY = "curr_user"
-CURR_INSTRUCTOR_KEY = "curr_instructor"
 SENDGRID_API_KEY = "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"
 
 app = Flask(__name__)
@@ -45,27 +44,20 @@ message = sendgrid.Mail()
 
 ##############################################################################
 @app.before_request
-def add_to_g():
-    """If we're logged in, add curr user and curr instructor to Flask global."""
+def add_user_to_g():
+    """If we're logged in, add curr user to Flask global."""
 
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
 
-    elif CURR_INSTRUCTOR_KEY in session:
-        g.instructor = Instructor.query.get(session[CURR_INSTRUCTOR_KEY])
+    else:
+        g.user = None
 
 
-def do_user_login(user):
+def do_login(user):
     """Log in user."""
 
     session[CURR_USER_KEY] = user.id
-    add_to_g()
-
-def do_instructor_login(instructor):
-    """Log in instructor."""
-
-    session[CURR_INSTRUCTOR_KEY] = instructor.id
-    add_to_g()
 
 
 def do_logout():
@@ -74,43 +66,38 @@ def do_logout():
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
-    if CURR_INSTRUCTOR_KEY in session:
-        del session[CURR_INSTRUCTOR_KEY]
-
 
 @app.route('/', methods=["GET", "POST"])
 def homepage():
     """Show homepage: """
     form = LoginForm()
 
-    # If post method and validated save either user or instructor to variable
-    # using the each class's authenticate method
+    # If post method and validated, save user to variable
+    # using the each class's authenticate method. Then login user
     if form.validate_on_submit():
         user = User.authenticate(form.email.data,
                                  form.password.data)
-        instructor = Instructor.authenticate(form.email.data, form.password.data)
        
-        # if can authenticate user, login the user
         if user:
-            do_user_login(user)
+            do_login(user)
             flash(f"You have logged in!", "success")
-            return redirect("/")
-        
-        # if can authenticate instructor, login the instructor
-        if instructor:
-            do_instructor_login(instructor)
-            flash(f"You have logged in as an instructor!", "success")
             return redirect("/")
 
         flash("Invalid credentials.", 'danger')
 
-    # If get method, show homepage.
-    return render_template('home.html', form=form)
+    # If GET method and user not logged in, show homepage.
+    if not g.user:
+        return render_template('home.html', form=form)
+
+    # If GET method and user logged in, save global user to variable andshow homepage.
+    else:
+        user = g.user
+        return render_template('home.html', form=form, user=user)
 
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
-    """User create account route"""
+    """User and Instructor create account route"""
     do_logout()
 
     form = UserAddForm()
@@ -119,6 +106,7 @@ def signup():
     if form.validate_on_submit():
         try:
             user = User.signup(
+                is_instructor=form.is_instructor.data,
                 password=form.password.data,
                 email=form.email.data,
                 first_name=form.first_name.data,
@@ -150,7 +138,7 @@ def signup():
             print(e.message)
 
         # Login the newly registered user
-        do_user_login(user)
+        do_login(user)
 
         return redirect("/")
     # If get method, render the page
@@ -177,6 +165,9 @@ def edit_profile():
 
     user = g.user
 
+    if g.user.is_instructor:
+        return render_template('instructor_access/detail.html', user=user)
+
     return render_template('users/detail.html', user=user)
 
 ############################ CLASSES #####################3
@@ -185,7 +176,7 @@ def edit_profile():
 def display_json():
     """Show JSON of all created classes"""
 
-    serialized_classes = [c.serialize() for c in Classes.query.all()]
+    serialized_classes = [c.serialize() for c in YogaClass.query.all()]
     return jsonify(serialized_classes)
 
 @app.route('/classes/signup/<int:class_id>', methods=["POST"])
@@ -197,7 +188,7 @@ def class_signup(class_id):
         return redirect("/")
 
     # Grab yoga class from database and save logged in user to variable
-    yoga_class = Classes.query.get_or_404(class_id)
+    yoga_class = YogaClass.query.get_or_404(class_id)
     user = g.user
 
     try: 
@@ -217,7 +208,7 @@ def class_signup(class_id):
         from_email='olms2074@gmail.com',
         to_emails= user.email,
         subject='Yoga Class Signup Confirmation',
-        html_content=f"You have signed up for {yoga_class.class_instructor}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
+        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
 
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
@@ -229,87 +220,38 @@ def class_signup(class_id):
     except Exception as e:
         print(e.message)
     
-    flash(f"You have signed up for {yoga_class.class_instructor}'s yoga class on {yoga_class.start_date_time}", "success")
-    return redirect("/")
-
-@app.route('/classes/delete/<int:class_id>', methods=["POST"])
-def delete_class(class_id):
-    """Allow logged in instructor to delete class."""
-
-    if g.instructor:
-        Classes.query.get_or_404(class_id).delete()
-        db.session.commit()
-
-    else:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
-
+    flash(f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time}", "success")
     return redirect("/")
 
 ################################ INSTRUCTOR ACCESS ########################
+@app.route('/instructor_access/detail', methods=["GET", "POST"])
+def view_instructor():
+    """Update profile for current user."""
 
-@app.route('/instructor_access/signup', methods=["GET", "POST"])
-def instructor_signup():
-    """view/signup for available yoga classes using API"""
-
-    do_logout()
-    form = UserAddForm()
-
-    # If post method and validated, create instructor instance and save to database
-    if form.validate_on_submit():
-        hashed_pwd = bcrypt.generate_password_hash(form.password.data).decode('UTF-8')
-        try:
-            instructor = Instructor(
-                password=hashed_pwd,
-                email=form.email.data,
-                first_name=form.first_name.data,
-                last_name=form.last_name.data,
-                image_url=form.image_url.data or Instructor.image_url.default.arg,
-            )
-            db.session.add(instructor)
-            db.session.commit()
-
-        except IntegrityError as e:
-            flash("Email already taken", 'danger')
-            return render_template('instructor_access/signup.html', form=form)
-
-        # Send email to confirm instructor registration
-        message = Mail(
-            from_email='olms2074@gmail.com',
-            to_emails= form.email.data,
-            subject='Lunchtime Yoga Instructor Account Created',
-            html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To start creating yoga classes please go to http://localhost:5000/instructor_access/detail")
-
-        try:
-            sg = SendGridAPIClient(SENDGRID_API_KEY)
-            response = sg.send(message)
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
-
-        except Exception as e:
-            print(e.message)
-
-        # Login the instructor
-        do_instructor_login(instructor)
+    if not g.user.is_instructor:
+        flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    return render_template('instructor_access/signup.html',form=form)
+    user = g.user
+
+    return render_template('instructor_access/detail.html', user=user)
+
 
 @app.route('/instructor_access/add_class', methods=["GET", "POST"])
 def add_class():
     """view/signup for available yoga classes using API"""
-    if not g.instructor:
+    if not g.user.is_instructor:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
     form = ClassAddForm()
+    user = g.user
 
     # If POST method create Classes instance and add to database
     if form.validate_on_submit():
     
-        yoga_class = Classes(
-            instructor=form.instructor.data,
+        yoga_class = YogaClass(
+            instructor_id=user.id,
             location=form.location.data,
             start_date_time=form.start_date_time.data,
             end_date_time=form.end_date_time.data,
@@ -324,17 +266,19 @@ def add_class():
 
     return render_template('instructor_access/add_class.html', form=form)
 
-@app.route('/instructor_access/detail', methods=["GET", "POST"])
-def view_instructor():
-    """Update profile for current user."""
+@app.route('/classes/delete/<int:class_id>', methods=["POST"])
+def delete_class(class_id):
+    """Allow logged in instructor to delete class."""
 
-    if not g.instructor:
+    if g.user.is_instructor:
+        YogaClass.query.get_or_404(class_id).delete()
+        db.session.commit()
+
+    else:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    instructor = g.instructor
-
-    return render_template('instructor_access/detail.html', instructor=instructor)
+    return redirect("/")
 
 
 ##################Homepage and error pages#####################################

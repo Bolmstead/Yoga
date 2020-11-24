@@ -7,7 +7,7 @@
       <h2 class="featurette-heading">{{ user.first_name }} {{ user.last_name }}</h2>
       <p class="lead">You are signed up for the following classes:</p>
       <ul>
-        {% for c in user.classes %}
+        {% for c in user.classes_signed_up %}
           <div class="card" style="width: 18rem;">
             <div class="card-body">
               <h5 class="card-title">Yoga by {{ c.instructor.first_name }}</h5>

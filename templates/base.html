@@ -36,23 +36,23 @@
         <li><a href="/#contact">Contact</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        {% if g.user %}
+        {% if g.user.is_instructor %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  {{ g.user.first_name}}  
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/instructor_access/detail">Instructor Account</a>
+            <a class="dropdown-item" href="/logout">Log Out</a>
+          </div>
+        </li>
+        {% elif g.user %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  {{ g.user.first_name}}  
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="/users/detail">Account</a>
-            <a class="dropdown-item" href="/logout">Log Out</a>
-          </div>
-        </li>
-        {% elif g.instructor %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
-             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  {{ g.instructor.first_name}}  
-          </a>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/instructor_access/detail">Instructor Account</a>
             <a class="dropdown-item" href="/logout">Log Out</a>
           </div>
         </li>
@@ -75,19 +75,19 @@
   async function getClasses() {
       // save results from JSON get request to variable and iterate through each item
       const res = await axios.get('http://localhost:5000/json');
-      for (let t of res.data) {
+      for (let c of res.data) {
         // change time to MST to avoid converstion by adding to end of date string
-        const startTimeToMst = t.start_date_time + ("-0700");
-        const endTimeToMst = t.end_date_time + ("-0700");
+        const startTimeToMst = c.start_date_time + ("-0700");
+        const endTimeToMst = c.end_date_time + ("-0700");
         // create new date object using the MST date string
         const startDateObj = new Date(startTimeToMst);
         const endDateObj = new Date(endTimeToMst);
         // create event object using modified start/end datetimes
-        const eventObj = { startDate: startDateObj, 
-                          endDate: endDateObj, 
-                          instructor: t.class_instructor,
-                          location: t.location,
-                          classId: t.id, 
+        const eventObj = { startDate: c.start_date_time, 
+                          endDate: c.end_date_time, 
+                          instructor: c.instructor,
+                          location: c.location,
+                          classId: c.id, 
         };
         yogaClasses.push(eventObj)
         console.log(yogaClasses)

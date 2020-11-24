@@ -15,7 +15,7 @@
           {% endfor %}
           {{ field(placeholder=field.label.text, class="form-control") }}
         {% endfor %}
-  
+        <input type="hidden" id="timezone" name="timezone" value="-07:00">
         <button class="btn btn-primary btn-lg btn-block">Add</button>
       </form>
     </div>
