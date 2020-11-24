@@ -270,15 +270,18 @@ def add_class():
 def delete_class(class_id):
     """Allow logged in instructor to delete class."""
 
-    if g.user.is_instructor:
-        YogaClass.query.get_or_404(class_id).delete()
+    user = g.user
+
+    if user.is_instructor:
+        Signups.query.filter_by(user_id=user.id, class_id=class_id).delete
         db.session.commit()
+
+        flash("Class had been deleted", "success")
+        return redirect("/")
 
     else:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-
-    return redirect("/")
 
 
 ##################Homepage and error pages#####################################
