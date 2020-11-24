@@ -2,6 +2,7 @@ from datetime import datetime, date, time
 import pytz
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import delete
 # import pytz
 
 # dt = datetime.datetime()

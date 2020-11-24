@@ -273,7 +273,8 @@ def delete_class(class_id):
     user = g.user
 
     if user.is_instructor:
-        Signups.query.filter_by(user_id=user.id, class_id=class_id).delete
+        YogaClass.query.get(class_id).query.delete()
+        
         db.session.commit()
 
         flash("Class had been deleted", "success")
