@@ -39,7 +39,6 @@
         <h6 class="card-subtitle mb-2 text-muted">{{c.start_date_time}} - {{c.end_date_time}}</h6>
         <p class="card-text">Location: {{ c.location }}</p>
         <hr>
-        <!-- <a href="#" class="card-link">Card link</a> -->
         {% if c.users %}
           <h5 class="card-text">Who has signed up:</h5>
           <ul>
@@ -56,20 +55,22 @@
     </div>
   {% endfor %}
   {% else %}
-  <p class="lead">You are not scheduled to teach any classes</p>
+  <br>
+  <div class="container">
+    <p class="lead d-flex justify-content-center">You are not scheduled to teach any classes</p>
+  </div>
 {% endif %}
 
 {% if user.classes_signed_up %}
 <p class="lead">You are signed up for the following classes:</p>
   {% for c in user.classes_signed_up %}
-    <div class="card" style="width: 18rem;">
-      <div class="card-body">
+  <div class="card col-md-4 m-2 shadow pos-relative">
+    <div class="card-body">
         <h5 class="card-title">Yoga by {{ c.instructor.first_name }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{c.start_date_time}} - {{c.end_date_time}}</h6>
         <p class="card-text">Location: {{ c.location }}</p>
         <form method="POST" action="/classes/cancel_signup/{{ c.id }}">
-        <button type="submit" class="btn btn-light btn-sm active">Cancel Signup</button></form>
-        <!-- <a href="#" class="card-link">Card link</a> -->
+        <button type="submit" class="btn btn-light btn-sm active card-button">Cancel Signup</button></form>
       </div>
     </div>
   {% endfor %}

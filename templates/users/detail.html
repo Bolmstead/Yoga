@@ -2,32 +2,53 @@
 
 {% block content %}
 <br>
-<div class="row featurette">
-    <div class="col-md-7 order-md-2"><br>
-      <h2 class="featurette-heading">{{ user.first_name }} {{ user.last_name }}</h2>
-      <p class="lead">You are signed up for the following classes:</p>
-      <ul>
-        {% for c in user.classes_signed_up %}
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Yoga by {{ c.instructor.first_name }}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{c.start_date_time}} - {{c.end_date_time}}</h6>
-              <p class="card-text">Location: {{ c.location }}</p>
-              <form method="POST" action="/classes/cancel_signup/{{ c.id }}">
-              <button type="submit" class="btn btn-light btn-sm active">Cancel Signup</button></form>
-              <!-- <a href="#" class="card-link">Card link</a> -->
-            </div>
-          </div>
-        {% endfor %}
-      </ul>
-    </div>
-      <div class="col-md-5 order-md-1">
-        <img src="{{ user.image_url }}" alt="Image for {{ user.username }}" id="profile-pic">
-        {% if g.user.id == user.id %}
-        <a href="/users/edit">Edit Information</a>
-        {% endif %}
+
+<div class="row">
+  <div class="col-md-4 offset-md-2">
+    <img src="{{ user.image_url }}" alt="Image for {{ user.first_name }}" id="profile-image" class="shadow">
+  </div>
+  <div class="col-md-4">
+    {% if g.user.id == user.id %}
+      <br><div class="col-md-12"><h4 class="featurette-heading"><strong>{{ user.first_name }} {{ user.last_name }}</strong></h4></div> <br>
+      <div class="col-md-12"><a href="/users/edit" class="btn btn-info btn-sm btn-block shadow">Edit Account Information</a></div>
+    {% endif %}
+  </div>
+</div><br>
+
+{% if user.classes_teaching %}
+
+<p class="lead">You are scheduled to teach the following classes:</p>
+<div class="row">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category,msg in messages %}
+      <div class="alert alert-{{ category }}" role="alert">
+        {{msg}}
       </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+      
+  {% for c in user.classes_signed_up %}
+    <div class="card col-md-4 m-2 shadow pos-relative">
+      <div class="card-body">
+        <h5 class="card-title">Yoga by {{ c.instructor.first_name }}</h5> 
+        <h6 class="card-subtitle mb-2 text-muted">{{c.start_date_time}} - {{c.end_date_time}}</h6>
+        <p class="card-text">Location: {{ c.location }}</p>
+        <form method="POST" action="/classes/cancel_signup/{{ c.id }}">
+        <button type="submit" class="btn btn-light btn-sm active card-button">Cancel Signup</button></form>
+      </div>
+    </div>
 </div>
+  {% endfor %}
+  {% else %}
+  <br>
+  <div class="container">
+    <p class="lead d-flex justify-content-center">You are not scheduled for any classes</p>
+  </div>
+{% endif %}
 
 
 {% endblock %}

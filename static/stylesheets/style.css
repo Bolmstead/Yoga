@@ -198,3 +198,7 @@ nav + .container {
 	right: 15px;
 	bottom: 15px;
 }
+
+.user-detail-no-classes {
+	text-align: center;
+}
