@@ -94,6 +94,7 @@ def homepage():
         user = g.user
         return render_template('home.html', form=form, user=user)
 
+######################## SIGNUP / LOGIN ################################
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
@@ -170,14 +171,8 @@ def edit_profile():
 
     return render_template('users/detail.html', user=user)
 
-############################ CLASSES #####################3
+############################ YOGA CLASSES SIGNUP #####################3
 
-@app.route('/json')
-def display_json():
-    """Show JSON of all created classes"""
-
-    serialized_classes = [c.serialize() for c in YogaClass.query.all()]
-    return jsonify(serialized_classes)
 
 @app.route('/classes/signup/<int:class_id>', methods=["POST"])
 def class_signup(class_id):
@@ -223,10 +218,47 @@ def class_signup(class_id):
     flash(f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time}", "success")
     return redirect("/")
 
+
+@app.route('/classes/cancel_signup/<int:class_id>', methods=["POST"])
+def cancel_signup(class_id):
+    """Allow logged in instructor to delete class."""
+
+    if g.user:
+        user = g.user
+        yoga_class = YogaClass.query.get_or_404(class_id)
+        Signups.query.filter_by(user_id=user.id, class_id=class_id).delete()
+            
+        db.session.commit()
+
+        message = Mail(
+            from_email='olms2074@gmail.com',
+            to_emails= user.email,
+            subject='Yoga Class Signup Cancellation',
+            html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to http://localhost:5000/#calendar_classes")
+
+        try:
+            sg = SendGridAPIClient(SENDGRID_API_KEY)
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+
+        except Exception as e:
+            print(e.message)
+
+        flash("You have been removed from this class. To reschedule, select from the calendar below.", "success")
+        return redirect("/")
+
+    else:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+
 ################################ INSTRUCTOR ACCESS ########################
+
 @app.route('/instructor_access/detail', methods=["GET", "POST"])
 def view_instructor():
-    """Update profile for current user."""
+    """Instructor's account profile. Shows add/delete classes"""
 
     if not g.user.is_instructor:
         flash("Access unauthorized.", "danger")
@@ -284,6 +316,14 @@ def delete_class(class_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
+################## JSON ENDPOINT FOR ALL CLASSES #####################################
+
+@app.route('/json')
+def display_json():
+    """Show JSON of all created classes"""
+
+    serialized_classes = [c.serialize() for c in YogaClass.query.all()]
+    return jsonify(serialized_classes)
 
 ##################Homepage and error pages#####################################
 
@@ -292,4 +332,5 @@ def page_not_found(e):
     """404 NOT FOUND page."""
 
     return render_template('404.html'), 404
+
 

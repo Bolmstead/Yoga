@@ -123,6 +123,7 @@ nav + .container {
 	width: 200px;
 }
 
+
 .message-area {
 	margin-left: 10px;
 }
@@ -150,6 +151,12 @@ nav + .container {
 	.full-width .user-stats .stat {
 		display: none;
 	}
+}
+
+.smallest-pic {
+	height: 50px;
+	width: auto;
+	border-radius: 100%;
 }
 
 
@@ -180,4 +187,14 @@ nav + .container {
 
 .message-404 .form-inline input {
 	flex: 1;
+}
+
+.card {
+	position: relative;
+}
+
+.card-button {
+	position: absolute;
+	right: 15px;
+	bottom: 15px;
 }
