@@ -15,7 +15,7 @@ import email_validator
 
 
 CURR_USER_KEY = "curr_user"
-SENDGRID_API_KEY = "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"
+SENDGRID_API_KEY = "will_put_something_here"
 
 app = Flask(__name__)
 
