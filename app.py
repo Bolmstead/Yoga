@@ -36,11 +36,11 @@ db.create_all()
 toolbar = DebugToolbarExtension(app)
 
 ## Email API initialization
-account_sid = 'AC61fba0a85692bf29f107b606ce31b6cc' 
-auth_token = '[AuthToken]' 
-client = Client(account_sid, auth_token) 
+# account_sid = 'AC61fba0a85692bf29f107b606ce31b6cc' 
+# auth_token = '[AuthToken]' 
+# client = Client(account_sid, auth_token) 
 
-message = sendgrid.Mail()
+# message = sendgrid.Mail()
 
 ##############################################################################
 @app.before_request
