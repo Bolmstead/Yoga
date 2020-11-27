@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-  <div class="bg position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light" id="background-image">
-    <div class="col-md-10 p-lg-5 mx-auto my-1">
+
+<div id="background-image">
+  <div class="card text-center col-md-5 mx-auto my-auto card-position" >
+    <div class="col-md-12 p-lg-5 mx-auto my-1">
       <h1 class="display-4 font-weight-normal">Lunchtime Yoga for Professionals</h1>
       <p class="lead font-weight-normal">This is the homepage for the yoga website.</p>
 
@@ -16,14 +18,14 @@
       {% endwith %}
 
       {% if g.user %}
-      <br><div class="col-md-5 order-md-1 mx-auto">
+      <br><div class="col-md-8 order-md-1 mx-auto">
         <img src="{{ g.user.image_url }}" alt="Profile Image" id="profile-image" class="shadow">
       </div>
       <p class="lead font-weight-normal">Hi, {{ g.user.first_name }}</p>
 
       {% else %}
       <div class="row justify-content-sm-center">
-        <div class="col-md-7 col-lg-5">
+        <div class="col-md-7 col-lg-7">
           <form method="POST" id="user_form">
             {{ form.hidden_tag() }}
       
@@ -44,7 +46,11 @@
       {% endif %}
     </div>
   </div>
+</div>
 
+
+
+<div class="container">
   <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" id="about">
     <h1 class="display-4">About</h1><br>
     <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
@@ -102,16 +108,17 @@
   <div class="row" id="contact">
     <div class="text-center my-auto mx-auto">
       <a href="https://www.facebook.com/groups/2569017809890003">
-        <span class="icon"><i class="fab fa-facebook fa-xs"></i></span>
+        <span class="fb-icon"><i class="fab fa-facebook fa-xs"></i></span>
       </a>
     </div>
 
     <div class="text-center my-auto mx-auto">
       <a href="mailto:lisaolmstead@gmail.com">
-        <span class="icon"><i class="fas fa-envelope fa-xs"></i></span>
+        <span class="email-icon"><i class="fas fa-envelope fa-xs"></i></span>
       </a>
     </div>
   </div>
+</div>
 </div>
 
 {% endblock %}

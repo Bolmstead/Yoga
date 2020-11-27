@@ -4,10 +4,10 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 # Import API libraries
-from twilio.rest import Client 
-import sendgrid
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+# from twilio.rest import Client 
+# import sendgrid
+# from sendgrid import SendGridAPIClient
+# from sendgrid.helpers.mail import Mail
 
 #Import forms.py and email validator
 from forms import *
@@ -122,21 +122,21 @@ def signup():
             return render_template('users/signup.html', form=form)
 
         # Send email to user to confirm account creation
-        message = Mail(
-            from_email='olms2074@gmail.com',
-            to_emails= form.email.data,
-            subject='Lunchtime Yoga Account Created',
-            html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To view open yoga classes please go to http://localhost:5000/#calendar_classes")
+        # message = Mail(
+        #     from_email='olms2074@gmail.com',
+        #     to_emails= form.email.data,
+        #     subject='Lunchtime Yoga Account Created',
+        #     html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To view open yoga classes please go to http://localhost:5000/#calendar_classes")
 
-        try:
-            sg = SendGridAPIClient(SENDGRID_API_KEY)
-            response = sg.send(message)
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
+        # try:
+        #     sg = SendGridAPIClient(SENDGRID_API_KEY)
+        #     response = sg.send(message)
+        #     print(response.status_code)
+        #     print(response.body)
+        #     print(response.headers)
 
-        except Exception as e:
-            print(e.message)
+        # except Exception as e:
+        #     print(e.message)
 
         # Login the newly registered user
         do_login(user)
@@ -199,21 +199,21 @@ def class_signup(class_id):
     db.session.commit()
 
     # Send email to user confirming their class signup
-    message = Mail(
-        from_email='olms2074@gmail.com',
-        to_emails= user.email,
-        subject='Yoga Class Signup Confirmation',
-        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
+    # message = Mail(
+    #     from_email='olms2074@gmail.com',
+    #     to_emails= user.email,
+    #     subject='Yoga Class Signup Confirmation',
+    #     html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
 
-    try:
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
+    # try:
+    #     sg = SendGridAPIClient(SENDGRID_API_KEY)
+    #     response = sg.send(message)
+    #     print(response.status_code)
+    #     print(response.body)
+    #     print(response.headers)
 
-    except Exception as e:
-        print(e.message)
+    # except Exception as e:
+    #     print(e.message)
     
     flash(f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time}", "success")
     return redirect("/")
@@ -230,24 +230,27 @@ def cancel_signup(class_id):
             
         db.session.commit()
 
-        message = Mail(
-            from_email='olms2074@gmail.com',
-            to_emails= user.email,
-            subject='Yoga Class Signup Cancellation',
-            html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to http://localhost:5000/#calendar_classes")
+        # message = Mail(
+        #     from_email='olms2074@gmail.com',
+        #     to_emails= user.email,
+        #     subject='Yoga Class Signup Cancellation',
+        #     html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to http://localhost:5000/#calendar_classes")
 
-        try:
-            sg = SendGridAPIClient(SENDGRID_API_KEY)
-            response = sg.send(message)
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
+        # try:
+        #     sg = SendGridAPIClient(SENDGRID_API_KEY)
+        #     response = sg.send(message)
+        #     print(response.status_code)
+        #     print(response.body)
+        #     print(response.headers)
 
-        except Exception as e:
-            print(e.message)
+        # except Exception as e:
+        #     print(e.message)
 
         flash("You have been removed from this class. To reschedule, select from the calendar below.", "success")
-        return redirect("/")
+        if user.is_instructor:
+            return redirect("/instructor_access/detail")
+        else:
+            return redirect("/users/detail")
 
     else:
         flash("Access unauthorized.", "danger")
@@ -310,7 +313,7 @@ def delete_class(class_id):
         db.session.commit()
 
         flash("Class had been deleted", "success")
-        return redirect("/")
+        return redirect("/instructor_access/detail")
 
     else:
         flash("Access unauthorized.", "danger")

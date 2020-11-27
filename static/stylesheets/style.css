@@ -101,9 +101,34 @@ nav + .container {
 	max-width: 50px;
 }
 
-.icon{
-	color: gray;
+.fb-icon{
+	color: #6691CC;
 	font-size: 3em;
+}
+
+.email-icon{
+	color: #FFE9A2;
+	font-size: 3em;
+}
+
+/* .opaque {
+    -webkit-filter: blur(20px);
+    -moz-filter: blur(20px);
+    -o-filter: blur(20px);
+    -ms-filter: blur(20px);
+    filter: blur(20px);
+    opacity: 0.4;
+} */
+
+#background-image {
+	background-image: url("/static/images/yoga_bg.jpg");
+	height: 93vh;
+	width: 100vw;
+	position: relative;
+   }
+
+#pos-absolute {
+	position: absolute;
 }
 
 /* ===================== User profile */
@@ -189,8 +214,18 @@ nav + .container {
 	flex: 1;
 }
 
-.card {
+.card-position {
 	position: relative;
+	margin-top: 100px;
+	position: absolute;
+	top: 50%;
+	left: 30%;
+	min-height: 75%;
+	max-height: 90%;
+	min-width: 500px;
+	align-items: center;
+	transform:translate(0%, -50%);
+	-webkit-transform:translate(0%, -50%);
 }
 
 .card-button {

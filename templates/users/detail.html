@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container">
 <br>
 
 <div class="row">
@@ -30,7 +31,8 @@
     {% endif %}
   {% endwith %}
 
-      
+{% elif user.classes_signed_up %}
+  <p class="lead">You have signed up for the following classes:</p>
   {% for c in user.classes_signed_up %}
     <div class="card col-md-4 m-2 shadow pos-relative">
       <div class="card-body">
@@ -50,5 +52,5 @@
   </div>
 {% endif %}
 
-
+</div>
 {% endblock %}

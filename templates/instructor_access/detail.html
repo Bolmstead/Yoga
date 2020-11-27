@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container">
 <br>
 
 <div class="row">
@@ -9,27 +10,27 @@
   </div>
   <div class="col-md-4">
     {% if g.user.id == user.id %}
-      <br><div class="col-md-12"><h4 class="featurette-heading"><strong>{{ user.first_name }} {{ user.last_name }}</strong></h4></div> <br>
+      <br><div class="col-md-12"><h3 class="featurette-heading">{{ user.first_name }} {{ user.last_name }}</h3></div> <br>
       <div class="col-md-12"><a href="/instructor_access/add_class" class="btn btn-success btn-sm btn-block shadow">Create Class</a></div><br>
       <div class="col-md-12"><a href="/instructor_access/edit" class="btn btn-info btn-sm btn-block shadow">Edit Account Information</a></div>
     {% endif %}
   </div>
 </div><br>
+<div class="row">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+  {% for category,msg in messages %}
+  <div class="alert alert-{{ category }} col-md-8 offset-md-2" role="alert">
+    {{msg}}
+  </div>
+  {% endfor %}
+{% endif %}
+{% endwith %}
 
 {% if user.classes_teaching %}
-
-<p class="lead">You are scheduled to teach the following classes:</p>
+</div>
+<h2 class="lead d-flex justify-content-center">You are scheduled to teach the following classes:</h2>
 <div class="row">
-
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category,msg in messages %}
-      <div class="alert alert-{{ category }}" role="alert">
-        {{msg}}
-      </div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
 
       
   {% for c in user.classes_teaching %}
@@ -57,12 +58,14 @@
   {% else %}
   <br>
   <div class="container">
-    <p class="lead d-flex justify-content-center">You are not scheduled to teach any classes</p>
+    <h2 class="lead d-flex justify-content-center">You are not scheduled to teach any classes</h2>
   </div>
 {% endif %}
 
 {% if user.classes_signed_up %}
-<p class="lead">You are signed up for the following classes:</p>
+<div class="container"><br>
+  <h2 class="lead d-flex justify-content-center">You are signed up for the following classes:</h2>
+</div>
   {% for c in user.classes_signed_up %}
   <div class="card col-md-4 m-2 shadow pos-relative">
     <div class="card-body">
@@ -78,5 +81,5 @@
 
 </div>
 
-
+</div>
 {% endblock %}
