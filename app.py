@@ -30,8 +30,7 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SQLALCHEMY_DATABSE_URI'] = os.environ.get('DATABASE_URL', 'postgres:///yoga')
 
 connect_db(app)
-db.drop_all()
-db.create_all()
+
 
 toolbar = DebugToolbarExtension(app)
 
