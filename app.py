@@ -216,6 +216,10 @@ def class_signup(class_id):
         flash("Signup not complete. You are unable to signup for your own class.",'danger')
         return redirect("/users/detail")
 
+    if len(yoga_class.users) >= 6:
+        flash("There are no more spots in this class. Please see calendar for more classes.",'danger')
+        return redirect("/")
+
     try: 
         signup = Signups(
         user_id=user.id,
@@ -301,12 +305,22 @@ def add_class():
 
     # If POST method create Classes instance and add to database
     if form.validate_on_submit():
-    
+
+        # If the start time input is after the end time input, redirect and flash error.
+        if form.start_date_time.data > form.end_date_time.data:
+            flash("Class start time must be before class end time.", "danger")
+            return redirect("/users/add_class")
+
+        # Attempted to add MST time zone to naive time object. Still comes out to be GMT
+        mtn_tz = pytz.timezone('US/Mountain')
+        start_dt_mtn = mtn_tz.localize(form.start_date_time.data)
+        end_dt_mtn = mtn_tz.localize(form.end_date_time.data)
+
         yoga_class = YogaClass(
             instructor_id=user.id,
             location=form.location.data,
-            start_date_time=form.start_date_time.data,
-            end_date_time=form.end_date_time.data,
+            start_date_time=start_dt_mtn,
+            end_date_time=end_dt_mtn,
             )
 
         db.session.add(yoga_class)

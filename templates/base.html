@@ -93,8 +93,8 @@
         const startDateObj = new Date(startTimeToMst);
         const endDateObj = new Date(endTimeToMst);
         // create event object using modified start/end datetimes
-        const eventObj = { startDate: c.start_date_time, 
-                          endDate: c.end_date_time, 
+        const eventObj = { startDate: startTimeToMst,
+                          endDate: endTimeToMst, 
                           instructor: c.instructor,
                           location: c.location,
                           classId: c.id, 

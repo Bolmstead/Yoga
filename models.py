@@ -90,6 +90,8 @@ class YogaClass(db.Model):
             "start_date_time": self.start_date_time,
             "end_date_time": self.end_date_time,
         }
+    
+
 
 def connect_db(app):
     """Connect this database to provided Yoga Website."""
