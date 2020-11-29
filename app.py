@@ -30,7 +30,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SQLALCHEMY_DATABSE_URI'] = os.environ.get('DATABASE_URL', 'postgres:///yoga')
 
 connect_db(app)
-
+db.drop_all()
+db.create_all()
 
 toolbar = DebugToolbarExtension(app)
 
@@ -111,6 +112,7 @@ def signup():
                 email=form.email.data,
                 first_name=form.first_name.data,
                 last_name=form.last_name.data,
+                phone=form.phone.data,
             )
             db.session.commit()
 
@@ -156,7 +158,7 @@ def logout():
 
 
 @app.route('/users/detail', methods=["GET", "POST"])
-def edit_profile():
+def user_detail():
     """Show information of the logged in user"""
 
     if not g.user:
@@ -169,6 +171,30 @@ def edit_profile():
         return render_template('users/detail.html', user=user)
 
     return render_template('users/detail.html', user=user)
+
+@app.route('/users/edit', methods=["GET", "POST"])
+def edit_profile():
+    """Update profile for current user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    user = g.user
+    form = UserEditForm(obj=user)
+
+    if form.validate_on_submit():
+        if User.authenticate(user.email, form.password.data):
+            user.email = form.email.data
+            user.phone = form.phone.data
+
+            db.session.commit()
+            flash("Your account changes have been made!", "success")
+            return redirect(f"/users/detail")
+
+        flash("Wrong password, please try again.", 'danger')
+
+    return render_template('users/edit.html', form=form)
 
 ############################ YOGA CLASSES SIGNUP #####################3
 
@@ -299,7 +325,7 @@ def delete_class(class_id):
     user = g.user
 
     if user.is_instructor:
-        YogaClass.query.get(class_id).query.delete()
+        yoga_class = YogaClass.query.get_or_404(class_id).query.delete
         
         db.session.commit()
 

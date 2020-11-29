@@ -32,12 +32,13 @@ class User(db.Model):
     email = db.Column(db.String(50), nullable=False, unique=True,)
     first_name = db.Column(db.String(50), nullable=False,)
     last_name = db.Column(db.String(50), nullable=False,)
+    phone = db.Column(db.String(12), nullable=False,)
 
     classes_signed_up = db.relationship('YogaClass', secondary='signups', backref='users')
     classes_teaching = db.relationship('YogaClass', backref='instructor')
 
     @classmethod
-    def signup(cls, is_instructor, first_name, last_name, email, password):
+    def signup(cls, is_instructor, first_name, last_name, email, password, phone):
         """Sign up user. Hashes password and adds user to system."""
 
         hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
@@ -48,6 +49,7 @@ class User(db.Model):
             email=email,
             first_name=first_name,
             last_name=last_name,
+            phone=phone,
         )
 
         db.session.add(user)

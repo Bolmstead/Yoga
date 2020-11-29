@@ -23,21 +23,14 @@ class UserAddForm(FlaskForm):
     password = PasswordField('Password', validators=[Length(min=7)])
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
+    phone = StringField('Phone', validators=[DataRequired()])
     is_instructor = BooleanField('Are you an instructor?', false_values=None)
-
-# class InstructorAddForm(FlaskForm):
-#     """Form for adding instructors."""
-#     email = StringField('E-mail', validators=[DataRequired(), Email()])
-#     first_name = StringField('First Name',validators=[DataRequired()])
-#     last_name = StringField('Last Name',validators=[DataRequired()])
-#     password = PasswordField('Password', validators=[Length(min=7)])
-#     image_url = StringField('(Optional) Image URL')
 
 class UserEditForm(FlaskForm):
     """Form for editing users."""
     email = StringField('E-mail', validators=[DataRequired(), Email()])
-    image_url = StringField('(Optional) Image URL')
-    password = PasswordField('Password', validators=[Length(min=6)])
+    password = PasswordField('Password', validators=[Length(min=7)])
+    phone = StringField('Phone', validators=[DataRequired()])
 
 class LoginForm(FlaskForm):
     """Form to login user or instructor."""
