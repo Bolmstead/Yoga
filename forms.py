@@ -23,7 +23,6 @@ class UserAddForm(FlaskForm):
     password = PasswordField('Password', validators=[Length(min=7)])
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
-    image_url = StringField('(Optional) Image URL')
     is_instructor = BooleanField('Are you an instructor?', false_values=None)
 
 # class InstructorAddForm(FlaskForm):

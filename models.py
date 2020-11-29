@@ -29,16 +29,15 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True,)
     is_instructor = db.Column(db.Boolean)
     password = db.Column(db.Text, nullable=False, unique=True,)
-    email = db.Column(db.String(30), nullable=False, unique=True,)
-    first_name = db.Column(db.String(30), nullable=False,)
-    last_name = db.Column(db.String(30), nullable=False,)
-    image_url = db.Column(db.Text, default="/static/images/profile_pic.png",)
+    email = db.Column(db.String(50), nullable=False, unique=True,)
+    first_name = db.Column(db.String(50), nullable=False,)
+    last_name = db.Column(db.String(50), nullable=False,)
 
     classes_signed_up = db.relationship('YogaClass', secondary='signups', backref='users')
     classes_teaching = db.relationship('YogaClass', backref='instructor')
 
     @classmethod
-    def signup(cls, is_instructor, first_name, last_name, email, password, image_url):
+    def signup(cls, is_instructor, first_name, last_name, email, password):
         """Sign up user. Hashes password and adds user to system."""
 
         hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
@@ -49,7 +48,6 @@ class User(db.Model):
             email=email,
             first_name=first_name,
             last_name=last_name,
-            image_url=image_url,
         )
 
         db.session.add(user)

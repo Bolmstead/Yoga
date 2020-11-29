@@ -30,8 +30,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SQLALCHEMY_DATABSE_URI'] = os.environ.get('DATABASE_URL', 'postgres:///yoga')
 
 connect_db(app)
-# db.drop_all()
-# db.create_all()
+db.drop_all()
+db.create_all()
 
 toolbar = DebugToolbarExtension(app)
 
@@ -96,7 +96,7 @@ def homepage():
 
 ######################## SIGNUP / LOGIN ################################
 
-@app.route('/signup', methods=["GET", "POST"])
+@app.route('/users/signup', methods=["GET", "POST"])
 def signup():
     """User and Instructor create account route"""
     do_logout()
@@ -112,7 +112,6 @@ def signup():
                 email=form.email.data,
                 first_name=form.first_name.data,
                 last_name=form.last_name.data,
-                image_url=form.image_url.data or User.image_url.default.arg,
             )
             db.session.commit()
 
@@ -143,7 +142,8 @@ def signup():
 
         return redirect("/")
     # If get method, render the page
-    return render_template('users/signup.html', form=form)
+    else:
+        return render_template('users/signup.html', form=form)
 
 
 @app.route('/logout')
@@ -167,7 +167,7 @@ def edit_profile():
     user = g.user
 
     if g.user.is_instructor:
-        return render_template('instructor_access/detail.html', user=user)
+        return render_template('users/detail.html', user=user)
 
     return render_template('users/detail.html', user=user)
 
@@ -185,6 +185,11 @@ def class_signup(class_id):
     # Grab yoga class from database and save logged in user to variable
     yoga_class = YogaClass.query.get_or_404(class_id)
     user = g.user
+
+    # if instructor tries to sign up for own class, redirect and flash error
+    if user.id == yoga_class.instructor_id:
+        flash("Signup not complete. You are unable to signup for your own class.",'danger')
+        return redirect("/users/detail")
 
     try: 
         signup = Signups(
@@ -246,9 +251,9 @@ def cancel_signup(class_id):
         # except Exception as e:
         #     print(e.message)
 
-        flash("You have been removed from this class. To reschedule, select from the calendar below.", "success")
+        flash("You have been removed from this class", "success")
         if user.is_instructor:
-            return redirect("/instructor_access/detail")
+            return redirect("/users/detail")
         else:
             return redirect("/users/detail")
 
@@ -259,20 +264,7 @@ def cancel_signup(class_id):
 
 ################################ INSTRUCTOR ACCESS ########################
 
-@app.route('/instructor_access/detail', methods=["GET", "POST"])
-def view_instructor():
-    """Instructor's account profile. Shows add/delete classes"""
-
-    if not g.user.is_instructor:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
-
-    user = g.user
-
-    return render_template('instructor_access/detail.html', user=user)
-
-
-@app.route('/instructor_access/add_class', methods=["GET", "POST"])
+@app.route('/users/add_class', methods=["GET", "POST"])
 def add_class():
     """view/signup for available yoga classes using API"""
     if not g.user.is_instructor:
@@ -296,10 +288,10 @@ def add_class():
         db.session.commit()
 
         flash("Class created", "success")
-        return redirect("/instructor_access/detail")
+        return redirect("/users/detail")
 
 
-    return render_template('instructor_access/add_class.html', form=form)
+    return render_template('users/add_class.html', form=form)
 
 @app.route('/classes/delete/<int:class_id>', methods=["POST"])
 def delete_class(class_id):
@@ -313,7 +305,7 @@ def delete_class(class_id):
         db.session.commit()
 
         flash("Class had been deleted", "success")
-        return redirect("/instructor_access/detail")
+        return redirect("/users/detail")
 
     else:
         flash("Access unauthorized.", "danger")
@@ -337,3 +329,29 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
+@app.route('/test', methods=["GET", "POST"])
+def test():
+    """Show homepage: """
+    form = LoginForm()
+
+    # If post method and validated, save user to variable
+    # using the each class's authenticate method. Then login user
+    if form.validate_on_submit():
+        user = User.authenticate(form.email.data,
+                                 form.password.data)
+       
+        if user:
+            do_login(user)
+            flash(f"You have logged in!", "success")
+            return redirect("/")
+
+        flash("Invalid credentials.", 'danger')
+
+    # If GET method and user not logged in, show homepage.
+    if not g.user:
+        return render_template('test.html', form=form)
+
+    # If GET method and user logged in, save global user to variable andshow homepage.
+    else:
+        user = g.user
+        return render_template('test.html', form=form, user=user)
