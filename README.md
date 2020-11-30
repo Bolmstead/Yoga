@@ -1,24 +1,13 @@
-The source code for the calendar used on the website was pulled from https://github.com/brospars/simple-calendar and manipulated. All documents regarding the Simple Calendar code are located in /static/calendar. Author of the Simple Calendar grants permission to any person to use, copy, modify, or publish the code.
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
 <br />
 <p align="center">
 
-  <h3 align="center">Springboard Capstone 1 Project</h3>
+  <h3 align="center">Website for Lunchtime Yoga for Professionals</h3>
 
   <p align="center">
     A website to allow users/instructors to create, schedule, and signup for local yoga classes in Boise, Idaho.
     <br />
-    <a href="https://github.com/Bolmstead/Yoga"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/Bolmstead/Yoga"><strong>Explore the docs »</strong><a>
+    <br>
     <a href="https://yoga-website.herokuapp.com/">View Heroku Demo</a>
   </p>
 </p>
@@ -57,12 +46,13 @@ The source code for the calendar used on the website was pulled from https://git
 ## About The Project
 
 These documents serve as the Capstone 1 project for the Springboard Software Engineering Course. This code will hopefully operate as a website for the Lunchtime Yoga for Business Professionals group in the near future. On this website, a user will be able to do the following:
-* View information about the organization including pricing, instructor bios, how to contact, and social media links.
+* View information about the group including pricing, instructor bios, how to contact, and social media links.
 * Create and log into an account with an encrypted password using bcrypt.
 * Signup for available yoga classes using the website's calendar.
-* View enrolled yoga classes and cancel their enrollment.
+* View enrolled yoga classes and cancel their class enrollment.
 * Edit their account information.
 * (eventually) Receive automatic emails to confirm their yoga class signup, signup cancellation, or account creation.
+
 
 Instructors will be able to do all of the above and have the authority to do the following:
 * Create/delete a yoga class.
@@ -82,6 +72,7 @@ The following are coding languages, frameworks, source code, and an API that I u
 * [Jinja](https://jinja.palletsprojects.com/en/2.11.x/)
 * [Jinja](https://www.postgresql.org/)
 * [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+* [Postgres](https://www.postgresql.org/)
 * [SQL Alchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
 * [Flask-Bcrypt](https://flask-bcrypt.readthedocs.io/en/latest/)
 * [WTForms](https://wtforms.readthedocs.io/en/2.3.x/)
@@ -93,14 +84,21 @@ The following are coding languages, frameworks, source code, and an API that I u
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To get a local copy up and running follow these steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
+To get a local copy up and running follow these steps:
+1. (optional but recommended) Create a [virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
+2. Install [Postgres](https://www.postgresql.org/).
+3. Create a database named "yoga"
 * npm
   ```sh
-  npm install npm@latest -g
+  createdb yoga
+  ```
+
+### Library Installations
+
+Use the package manager <a href="https://pip.pypa.io/en/stable/">pip</a> to install the requirements.txt.
+* npm
+  ```sh
+  pip install -r requirements.txt
   ```
 
 ### Installation
@@ -153,7 +151,7 @@ Contributions are what make the open source community such an amazing place to b
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+The source code for the calendar used on the website was pulled from https://github.com/brospars/simple-calendar and manipulated. All documents regarding the Simple Calendar code are located in /static/calendar. Author of the Simple Calendar grants permission to any person to use, copy, modify, or publish the code.
 
 
 
