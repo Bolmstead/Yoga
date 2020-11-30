@@ -81,3 +81,14 @@ class ClassAddForm(FlaskForm):
     location = StringField('Location', validators=[DataRequired()])
     start_date_time = DateTimeLocalField('Class Start', format='%Y-%m-%dT%H:%M', validators=[DataRequired()])
     end_date_time = DateTimeLocalField('Class End', format='%Y-%m-%dT%H:%M', validators=[DataRequired()])
+
+
+
+
+    Email API
+
+    ## Email API initialization
+# account_sid = 'AC61fba0a85692bf29f107b606ce31b6cc' 
+# auth_token = '[AuthToken]' 
+# client = Client(account_sid, auth_token) 
+# message = sendgrid.Mail()
