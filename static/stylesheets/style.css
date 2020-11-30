@@ -54,7 +54,6 @@ nav + .container {
 	background-image: url("/static/images/yoga_bg.jpg");
 	height: 800px;
 	width: 100%;
-	position: relative;
    }
 
 @media (max-width: 992px) {
@@ -62,8 +61,11 @@ nav + .container {
 		background-image: url("/static/images/yoga_bg.jpg");
 		height: 1000px;
 		width: 100%;
-		position: relative;
 	   }	
+	}
+	
+.container-fluid {
+		padding: 0px;
 	}
 
 #login-card {

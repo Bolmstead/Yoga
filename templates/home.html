@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<div class="container-fluid">
 <div class="background-image">
   <div class="row">
     <div class="col-md-8 offset-md-2 alertbox">
@@ -48,7 +48,7 @@
 
         {% elif g.user and g.user.is_instructor %}
         <br><br><br><br>
-        <div class="mx-auto greeting-box">
+        <div class="mx-auto greeting-box text-center">
           <h4 class="card-title mb-4 mt-1">Hi, {{ g.user.first_name }}</h4><br><br>
         </div>
         <div class="form-group">
@@ -81,7 +81,7 @@
     </div>
   </div>
 </div>
-
+</div>
 
 <div class="container">
   <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" id="about">

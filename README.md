@@ -3,7 +3,7 @@
   <h3 align="center">Website for Lunchtime Yoga for Professionals</h3>
 
   <p align="center">
-    A website to allow users/instructors to create, schedule, and signup for local yoga classes in Boise, Idaho.
+    A mobile responsive website to allow users/instructors to create, schedule, and signup for yoga classes in Boise, Idaho.
     <br />
     <a href="https://github.com/Bolmstead/Yoga"><strong>Explore the docs »</strong><a>
     <br>
@@ -137,8 +137,6 @@ The source code for the calendar used on the website was pulled and maniputlated
 <!-- CONTACT -->
 ## Contact
 
-Berkley Olmstead
-olms2074@gmail.com
-[Linkedin](https://www.linkedin.com/in/berkleyolmstead/)
+Berkley Olmstead - olms2074@gmail.com - [Linkedin](https://www.linkedin.com/in/berkleyolmstead/)
 
 Project Link: [https://github.com/Bolmstead/Yoga](https://github.com/Bolmstead/Yoga)
