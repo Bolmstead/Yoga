@@ -59,7 +59,7 @@ Instructors will be able to do all of the above while having the authority to:
 * View who has enrolled for each class.
 
 
-### Built With
+## Built With
 
 The coding languages, frameworks, source code, and an API that I used to build this project:
 * Python
@@ -82,9 +82,12 @@ The coding languages, frameworks, source code, and an API that I used to build t
 
 
 <!-- GETTING STARTED -->
-## Getting Started
+## How to Run the Project
 
 To get a local copy up and running follow these steps:
+
+### Clone Repo
+
 1. Clone the repo by clicking on the green "Code" button at the top of the screen or by entering the following in your terminal:
    ```sh
    git clone https://github.com/Bolmstead/Yoga.git
@@ -108,7 +111,7 @@ To get a local copy up and running follow these steps:
   ```
 
 <!-- USAGE EXAMPLES -->
-##  Sendgrid API Setup (DO NOT FOLLOW. INCOMPLETE STEP)
+###  Sendgrid API Setup (DO NOT FOLLOW. INCOMPLETE STEP)
 
 6. Create a free account with [SendGrid](https://signup.sendgrid.com/)
 7. Follow their instructions to obtain a free API key for the Email API
@@ -129,7 +132,7 @@ Possible features that I would like to integrate into the website are:
 <!-- LICENSE -->
 ## Notes
 
-The source code for the calendar used on the website was pulled from https://github.com/brospars/simple-calendar and manipulated. All documents regarding the Simple Calendar code are located in /static/calendar. Author of the Simple Calendar grants permission to any person to use, copy, modify, or publish the code.
+The source code for the calendar used on the website was pulled from https://github.com/brospars/simple-calendar and manipulated. Author of the Simple Calendar grants permission to any person to use, copy, modify, or publish the code. All documents regarding the Simple Calendar code are located in /static/calendar.
 
 
 
