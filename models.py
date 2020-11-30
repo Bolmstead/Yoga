@@ -3,7 +3,6 @@ import pytz
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import delete
-# import pytz
 
 # dt = datetime.datetime()
 
@@ -12,8 +11,8 @@ db = SQLAlchemy()
 
 
 class Signups(db.Model):
-    """Class to establish the many-to-many relationship between the tables 'users' and 'classes'
-    for when a user signs up for a class"""
+    """Class to establish the many-to-many relationship between the 'users' and 
+    'classes' tables. Shows which users have signed up for which classes"""
 
     __tablename__ = 'signups'
 
@@ -57,8 +56,7 @@ class User(db.Model):
 
     @classmethod
     def authenticate(cls, email, password):
-        """Find user with `email` and `password` combination.
-        If can't find matching user (or if password is invalid), returns False."""
+        """Find user with `email` and `password` combination."""
 
         user = cls.query.filter_by(email=email).first()
 
@@ -67,6 +65,7 @@ class User(db.Model):
             if is_auth:
                 return user
 
+        #If can't find matching user (or if password is invalid), returns False.
         return False
 
 
@@ -92,8 +91,7 @@ class YogaClass(db.Model):
         }
     
 
-
 def connect_db(app):
-    """Connect this database to provided Yoga Website."""
+    """Connect this database to Yoga Website."""
     db.app = app
     db.init_app(app)

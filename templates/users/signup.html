@@ -3,40 +3,40 @@
 
 {% block content %}
 <br>
-  <div class="card text-center col-sm-10 col-md-8 col-lg-6 mx-auto my-auto shadow card-body" >
-    <div class="col-sm-10 col-md-10 mx-auto my-1">
-      <h1 class="join-message">Create Account</h1><br>
+<div class="card text-center col-sm-10 col-md-8 col-lg-6 mx-auto my-auto shadow card-body" >
+  <div class="col-sm-10 col-md-10 mx-auto my-1">
+    <h1 class="join-message">Create Account</h1><br>
 
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category,msg in messages %}
-          <div class="alert alert-{{ category }}" role="alert">
-            {{msg}}
-          </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-
-      <div class="row justify-content-sm-center">
-        <div class="col-md-10 form-group">
-          <form method="POST" id="user_form">
-            {{ form.hidden_tag() }}
-      
-            {% for field in form if field.widget.input_type != 'hidden' %}
-              {% for error in field.errors %}
-                <span class="text-danger">{{ error }}</span>
-              {% endfor %}
-              {% if field.id == 'is_instructor' %}
-                {{ field.label }} 
-              {% endif %}
-              {{ field(placeholder=field.label.text, class="form-control") }}
-            {% endfor %}
-      
-            <button class="btn btn-primary btn-lg btn-block">Sign up</button>
-          </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category,msg in messages %}
+        <div class="alert alert-{{ category }}" role="alert">
+          {{msg}}
         </div>
-      </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
+    <div class="row justify-content-sm-center">
+      <div class="col-md-10 form-group">
+        <form method="POST" id="user_form">
+          {{ form.hidden_tag() }}
+    
+          {% for field in form if field.widget.input_type != 'hidden' %}
+            {% for error in field.errors %}
+              <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+            {% if field.id == 'is_instructor' %}
+              {{ field.label }} 
+            {% endif %}
+            {{ field(placeholder=field.label.text, class="form-control") }}
+          {% endfor %}
+    
+          <button class="btn btn-primary btn-lg btn-block">Sign up</button>
+        </form>
+      </div>
     </div>
+
   </div>
+</div>
 {% endblock %}

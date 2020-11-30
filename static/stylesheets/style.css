@@ -11,27 +11,8 @@ html {
 	scroll-behavior: smooth;
   }
 
-.form-control {
-	margin-bottom: 20px;
-}
 
-.btn {
-	border-radius: 0px;
-}
-
-.btn:hover {
-	cursor: pointer;
-}
-
-.button-width {
-	width: 200px;
-}
-
-#home_container {
-	height: 500px;
-}
-
-/* ======================= Nav */
+/* ====== Navbar ======  */
 
 .navbar {
 	background-color: #fff;
@@ -48,26 +29,9 @@ html {
 	font-weight: bold;
 }
 
-.navbar a:hover {
-	color: #1c94e0;
-}
-
 .navbar-brand {
 	display: flex;
 	align-items: center;
-}
-
-.navbar-brand > img {
-	display: inline-block;
-	margin-bottom: 2px;
-	margin-right: 5px;
-	width: 130px;
-	border-radius: 2px;
-}
-
-.nav > li > a > img {
-	width: 32px;
-	border-radius: 32px;
 }
 
 ul.nav.navbar-nav {
@@ -79,48 +43,27 @@ ul.nav.navbar-nav li {
 	display: flex;
 }
 
-
 nav + .container {
 	margin-bottom: 1rem;
 }
 
-#nav-profile-image{
-	border-radius: 100%;
-	display: block;
-	margin-left: -15px;
-	margin: 0 auto 15px;
-	max-height: 50px;
-	max-width: 50px;
-}
 
-.fb-icon{
-	color: #6691CC;
-	font-size: 3em;
-}
+/* ====== Home Page ======  */
 
-.email-icon{
-	color: #FFE9A2;
-	font-size: 3em;
-}
-
-
-#background-image {
+.background-image {
 	background-image: url("/static/images/yoga_bg.jpg");
 	height: 800px;
 	width: 100%;
 	position: relative;
    }
 
-#background-image-vert {
-	background-image: url("/static/images/yoga_bg.jpg");
-	height: 1200px;
-	width: 100%;
-	position: relative;
-   }
-
-.col-centered {
-	display:inline-block;
-	float:none;
+@media (max-width: 992px) {
+	.background-image {
+		background-image: url("/static/images/yoga_bg.jpg");
+		height: 1000px;
+		width: 100%;
+		position: relative;
+	   }	
 	}
 
 #login-card {
@@ -143,26 +86,11 @@ nav + .container {
 	right: 0;
 }
 
-.vl {
-	border-left: 1px solid lightgray;
-	height: 350px;
-	position: absolute;
-	left: 50%;
-	top: 7%;
-  }
+.col-centered {
+	display:inline-block;
+	float:none;
+	}
 
-  .pos-relative {
-	position: relative;
-  }
-
-  .pos-absolute {
-	  position: absolute;
-  }
-/* ===================== User profile */
-
-.detail-image-div {
-	height: 250px;
-}
 .profile-image {
 	margin: auto;
 	height: 250px;
@@ -175,7 +103,7 @@ nav + .container {
 	position: absolute;
 }
 
-.bio-image {
+.profile-image-holder{
 	position: relative;
 	height: 300px;
 	width: 300px;
@@ -186,53 +114,17 @@ nav + .container {
 	margin: auto;
 }
 
-.greeting-box {
-	display: flex;
-	justify-content: center;
-} 
-
-.greeting {
-
+.fb-icon{
+	color: #6691CC;
+	font-size: 3em;
 }
 
-
-.message-area {
-	margin-left: 10px;
+.email-icon{
+	color: #FFE9A2;
+	font-size: 3em;
 }
 
-.full-width {
-	width: 100vw;
-	margin: 0 -50vw;
-	position: relative;
-	left: 50%;
-	right: 50%;
-}
-
-.row.full-width {
-	background-color: #fff;
-	margin-top: -80px;
-	margin-bottom: 1rem;
-	border-bottom: 1px solid #ccc;
-	border-top: 1px solid #ccc;
-	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
-	height: 60px;
-	align-items: center;
-}
-
-@media (max-width: 768px) {
-	.full-width .user-stats .stat {
-		display: none;
-	}
-}
-
-.smallest-pic {
-	height: 50px;
-	width: auto;
-	border-radius: 100%;
-}
-
-
-/* ========================== Signup/Login */
+/* ====== Forms ======  */
 
 #user_form input.form-control {
 	font-size: 18px;
@@ -240,7 +132,7 @@ nav + .container {
 	padding: 12px;
 }
 
-/* ================================ 404 page */
+/* ====== 404 Page ======  */
 
 .message-404 {
 	color: white;
@@ -260,18 +152,22 @@ nav + .container {
 	flex: 1;
 }
 
-.card-position {
+/* ====== Misc ======  */
+
+.form-control {
+	margin-bottom: 20px;
+}
+
+.pos-relative {
 	position: relative;
-	margin-top: 100px;
-	position: absolute;
-	top: 50%;
-	left: 30%;
-	min-height: 75%;
-	max-height: 90%;
-	min-width: 500px;
-	align-items: center;
-	transform:translate(0%, -50%);
-	-webkit-transform:translate(0%, -50%);
+  }
+
+.btn {
+	border-radius: 0px;
+}
+
+.btn:hover {
+	cursor: pointer;
 }
 
 .card-button {
@@ -279,9 +175,3 @@ nav + .container {
 	right: 15px;
 	bottom: 15px;
 }
-
-.user-detail-no-classes {
-	text-align: center;
-}
-
-

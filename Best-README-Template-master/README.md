@@ -1,4 +1,10 @@
-The source code for the calendar used on the website was pulled from https://github.com/brospars/simple-calendar and manipulated. All documents regarding the Simple Calendar code are located in /static/calendar. Author of the Simple Calendar grants permission to any person to use, copy, modify, or publish the code.
+<!--
+*** Thanks for checking out the Best-README-Template. If you have a suggestion
+*** that would make this better, please fork the repo and create a pull request
+*** or simply open an issue with the tag "enhancement".
+*** Thanks again! Now go create something AMAZING! :D
+-->
+
 
 
 <!-- PROJECT SHIELDS -->
@@ -9,17 +15,35 @@ The source code for the calendar used on the website was pulled from https://git
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
+
+
+<!-- PROJECT LOGO -->
 <br />
 <p align="center">
+  <a href="https://github.com/othneildrew/Best-README-Template">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
-  <h3 align="center">Springboard Capstone 1 Project</h3>
+  <h3 align="center">Best-README-Template</h3>
 
   <p align="center">
-    A website to allow users/instructors to create, schedule, and signup for local yoga classes in Boise, Idaho.
+    An awesome README template to jumpstart your projects!
     <br />
-    <a href="https://github.com/Bolmstead/Yoga"><strong>Explore the docs »</strong></a>
-    <a href="https://yoga-website.herokuapp.com/">View Heroku Demo</a>
+    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    ·
+    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
   </p>
 </p>
 
@@ -56,44 +80,33 @@ The source code for the calendar used on the website was pulled from https://git
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-These documents serve as the Capstone 1 project for the Springboard Software Engineering Course. This code will hopefully operate as a website for the Lunchtime Yoga for Business Professionals group in the near future. On this website, a user will be able to do the following:
-* View information about the organization including pricing, instructor bios, how to contact, and social media links.
-* Create and log into an account with an encrypted password using bcrypt.
-* Signup for available yoga classes using the website's calendar.
-* View enrolled yoga classes and cancel their enrollment.
-* Edit their account information.
-* (eventually) Receive automatic emails to confirm their yoga class signup, signup cancellation, or account creation.
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Instructors will be able to do all of the above and have the authority to do the following:
-* Create/delete a yoga class.
-* View who has enrolled for each class.
+There are many great README templates available on GitHub, however, I didn't find one that really suit my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
 
+Here's why:
+* Your time should be focused on creating something amazing. A project that solves a problem and helps others
+* You shouldn't be doing the same tasks over and over like creating a README from scratch
+* You should element DRY principles to the rest of your life :smile:
+
+Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have have contributed to expanding this template!
+
+A list of commonly used resources that I find helpful are listed in the acknowledgements.
 
 ### Built With
 
-The following are coding languages, frameworks, source code, and an API that I used to build this project:
-* Python
-* Javascript
-* HTML
-* CSS
+This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 * [Bootstrap](https://getbootstrap.com)
 * [JQuery](https://jquery.com)
-* [Axios](https://www.npmjs.com/package/axios)
-* [Jinja](https://jinja.palletsprojects.com/en/2.11.x/)
-* [Jinja](https://www.postgresql.org/)
-* [Flask](https://flask.palletsprojects.com/en/1.1.x/)
-* [SQL Alchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
-* [Flask-Bcrypt](https://flask-bcrypt.readthedocs.io/en/latest/)
-* [WTForms](https://wtforms.readthedocs.io/en/2.3.x/)
-* [Font Awesome](https://fontawesome.com/)
-* [Simple Calendar](https://github.com/brospars/simple-calendar)
-* [Send Grid / Twilio](https://sendgrid.com/docs/api-reference/)
+* [Laravel](https://laravel.com)
+
 
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To get a local copy up and running follow these steps.
+This is an example of how you may give instructions on setting up your project locally.
+To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 

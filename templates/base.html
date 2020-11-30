@@ -74,8 +74,6 @@
   {% block content %}
   {% endblock %}
 
-
-
 <!-- Calendar Javascript -->
 <script type="text/javascript" src="/static/calendar/dist/jquery.simple-calendar.js"></script>
 
@@ -107,13 +105,10 @@
 
     // calendar coder's instructions to create events in calendar
     $("#calendar").simpleCalendar({
-            // displays events
             displayEvents:true,
             // event dates
             events:yogaClasses,
-            // disable showing event details
             disableEventDetails:false,
-            // disable showing empty date details
             disableEmptyDetails:false
             });
 
@@ -125,7 +120,6 @@
 // functions created to correct classes not initially displayed on calendar
 setTimeout(function(){ $(".btn-next").click()}, 100);
 $(".btn-prev").click();
-
 
 // temporary function to display element information in console to assist in debugging
 document.addEventListener("click", function(e){console.dir(e.target)});

@@ -1,17 +1,15 @@
 import os
-from flask import Flask, render_template, request, flash, redirect, session, g, abort , url_for, jsonify
+from flask import Flask, render_template, request, flash, redirect, session, g, url_for, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
+from forms import *
+import email_validator
 
 # Import API libraries
 # from twilio.rest import Client 
 # import sendgrid
 # from sendgrid import SendGridAPIClient
 # from sendgrid.helpers.mail import Mail
-
-#Import forms.py and email validator
-from forms import *
-import email_validator
 
 
 CURR_USER_KEY = "curr_user"
@@ -26,8 +24,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "thisisayogawebsiteformymom")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-# Heroku
-app.config['SQLALCHEMY_DATABSE_URI'] = os.environ.get('DATABASE_URL', 'postgres:///yoga')
 
 connect_db(app)
 db.drop_all()
@@ -39,10 +35,9 @@ toolbar = DebugToolbarExtension(app)
 # account_sid = 'AC61fba0a85692bf29f107b606ce31b6cc' 
 # auth_token = '[AuthToken]' 
 # client = Client(account_sid, auth_token) 
-
 # message = sendgrid.Mail()
 
-##############################################################################
+
 @app.before_request
 def add_user_to_g():
     """If we're logged in, add curr user to Flask global."""
@@ -72,8 +67,7 @@ def homepage():
     """Show homepage: """
     form = LoginForm()
 
-    # If post method and validated, save user to variable
-    # using the each class's authenticate method. Then login user
+    # If post method and validated, login user
     if form.validate_on_submit():
         user = User.authenticate(form.email.data,
                                  form.password.data)
@@ -85,14 +79,17 @@ def homepage():
 
         flash("Invalid credentials.", 'danger')
 
-    # If GET method and user not logged in, show homepage.
+    # If GET method and user not logged in, show homepage 
+    # passing form variable
     if not g.user:
         return render_template('home.html', form=form)
 
-    # If GET method and user logged in, save global user to variable andshow homepage.
+    # If GET method and user logged in, show homepage 
+    # passing user and form variables.
     else:
         user = g.user
         return render_template('home.html', form=form, user=user)
+
 
 ######################## SIGNUP / LOGIN ################################
 
@@ -157,6 +154,8 @@ def logout():
     return redirect("/")
 
 
+###################### USER ACCESS ########################
+
 @app.route('/users/detail', methods=["GET", "POST"])
 def user_detail():
     """Show information of the logged in user"""
@@ -166,11 +165,8 @@ def user_detail():
         return redirect("/")
 
     user = g.user
-
-    if g.user.is_instructor:
-        return render_template('users/detail.html', user=user)
-
     return render_template('users/detail.html', user=user)
+
 
 @app.route('/users/edit', methods=["GET", "POST"])
 def edit_profile():
@@ -183,6 +179,7 @@ def edit_profile():
     user = g.user
     form = UserEditForm(obj=user)
 
+    # If post method and validated, authenticate user and commit
     if form.validate_on_submit():
         if User.authenticate(user.email, form.password.data):
             user.email = form.email.data
@@ -196,8 +193,8 @@ def edit_profile():
 
     return render_template('users/edit.html', form=form)
 
-############################ YOGA CLASSES SIGNUP #####################3
 
+####################### YOGA CLASSES SIGNUP ##########################3
 
 @app.route('/classes/signup/<int:class_id>', methods=["POST"])
 def class_signup(class_id):
@@ -214,7 +211,7 @@ def class_signup(class_id):
     # if instructor tries to sign up for own class, redirect and flash error
     if user.id == yoga_class.instructor_id:
         flash("Signup not complete. You are unable to signup for your own class.",'danger')
-        return redirect("/users/detail")
+        return redirect("/")
 
     if len(yoga_class.users) >= 6:
         flash("There are no more spots in this class. Please see calendar for more classes.",'danger')
@@ -255,47 +252,46 @@ def class_signup(class_id):
 
 @app.route('/classes/cancel_signup/<int:class_id>', methods=["POST"])
 def cancel_signup(class_id):
-    """Allow logged in instructor to delete class."""
+    """Allows logged in user or instructor to cancel their class signup."""
 
-    if g.user:
-        user = g.user
-        yoga_class = YogaClass.query.get_or_404(class_id)
-        Signups.query.filter_by(user_id=user.id, class_id=class_id).delete()
-            
-        db.session.commit()
-
-        # message = Mail(
-        #     from_email='olms2074@gmail.com',
-        #     to_emails= user.email,
-        #     subject='Yoga Class Signup Cancellation',
-        #     html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to http://localhost:5000/#calendar_classes")
-
-        # try:
-        #     sg = SendGridAPIClient(SENDGRID_API_KEY)
-        #     response = sg.send(message)
-        #     print(response.status_code)
-        #     print(response.body)
-        #     print(response.headers)
-
-        # except Exception as e:
-        #     print(e.message)
-
-        flash("You have been removed from this class", "success")
-        if user.is_instructor:
-            return redirect("/users/detail")
-        else:
-            return redirect("/users/detail")
-
-    else:
+    if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
 
-################################ INSTRUCTOR ACCESS ########################
+    user = g.user
+    yoga_class = YogaClass.query.get_or_404(class_id)
+    Signups.query.filter_by(user_id=user.id, class_id=class_id).delete()
+        
+    db.session.commit()
+
+    # message = Mail(
+    #     from_email='olms2074@gmail.com',
+    #     to_emails= user.email,
+    #     subject='Yoga Class Signup Cancellation',
+    #     html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to http://localhost:5000/#calendar_classes")
+
+    # try:
+    #     sg = SendGridAPIClient(SENDGRID_API_KEY)
+    #     response = sg.send(message)
+    #     print(response.status_code)
+    #     print(response.body)
+    #     print(response.headers)
+
+    # except Exception as e:
+    #     print(e.message)
+
+    flash("You have been removed from this class", "success")
+    return redirect("/users/detail")
+
+
+######################### INSTRUCTOR ACCESS ##############################
 
 @app.route('/users/add_class', methods=["GET", "POST"])
 def add_class():
-    """view/signup for available yoga classes using API"""
+    """ Allows instructor to add a class"""
+
+    #if user is not an instructor, redirect to homepage with flash error
     if not g.user.is_instructor:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -334,13 +330,20 @@ def add_class():
 
 @app.route('/classes/delete/<int:class_id>', methods=["POST"])
 def delete_class(class_id):
-    """Allow logged in instructor to delete class."""
+    """Allows instructor to delete a class."""
+
+    #if user is not an instructor, redirect to homepage with flash error
+    if not g.user.is_instructor:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
 
     user = g.user
 
+    #if user is an instructor, delete class
     if user.is_instructor:
-        yoga_class = YogaClass.query.get_or_404(class_id).query.delete
+        yoga_class = YogaClass.query.get_or_404(class_id)
         
+        db.session.delete(yoga_class)
         db.session.commit()
 
         flash("Class had been deleted", "success")
@@ -350,47 +353,22 @@ def delete_class(class_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-################## JSON ENDPOINT FOR ALL CLASSES #####################################
+
+################## JSON ENDPOINT  #####################################
 
 @app.route('/json')
 def display_json():
-    """Show JSON of all created classes"""
+    """Show JSON of all created classes. Allows Javascript 
+    to grab class information to populate calendar"""
 
     serialized_classes = [c.serialize() for c in YogaClass.query.all()]
     return jsonify(serialized_classes)
 
-##################Homepage and error pages#####################################
+
+################## HOMEPAGE AND ERRORS #####################################
 
 @app.errorhandler(404)
 def page_not_found(e):
     """404 NOT FOUND page."""
 
     return render_template('404.html'), 404
-
-
-@app.route('/test', methods=["GET", "POST"])
-def test():
-    """Show homepage: """
-    form = LoginForm()
-
-    # If post method and validated, save user to variable
-    # using the each class's authenticate method. Then login user
-    if form.validate_on_submit():
-        user = User.authenticate(form.email.data,
-                                 form.password.data)
-       
-        if user:
-            do_login(user)
-            flash(f"You have logged in!", "success")
-            return redirect("/")
-
-        flash("Invalid credentials.", 'danger')
-
-    # If GET method and user not logged in, show homepage.
-    if not g.user:
-        return render_template('test.html', form=form)
-
-    # If GET method and user logged in, save global user to variable andshow homepage.
-    else:
-        user = g.user
-        return render_template('test.html', form=form, user=user)
