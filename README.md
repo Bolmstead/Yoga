@@ -1,4 +1,3 @@
-<br />
 <p align="center">
 
   <h3 align="center">Website for Lunchtime Yoga for Professionals</h3>
@@ -70,7 +69,6 @@ The coding languages, frameworks, source code, and an API that I used to build t
 * [JQuery](https://jquery.com)
 * [Axios](https://www.npmjs.com/package/axios)
 * [Jinja](https://jinja.palletsprojects.com/en/2.11.x/)
-* [Jinja](https://www.postgresql.org/)
 * [Flask](https://flask.palletsprojects.com/en/1.1.x/)
 * [Postgres](https://www.postgresql.org/)
 * [SQL Alchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
@@ -78,7 +76,7 @@ The coding languages, frameworks, source code, and an API that I used to build t
 * [WTForms](https://wtforms.readthedocs.io/en/2.3.x/)
 * [Font Awesome](https://fontawesome.com/)
 * [Simple Calendar](https://github.com/brospars/simple-calendar)
-* [Send Grid / Twilio](https://sendgrid.com/docs/api-reference/)
+* [Send Grid Email API](https://sendgrid.com/docs/api-reference/)
 
 
 <!-- GETTING STARTED -->
@@ -132,7 +130,7 @@ Possible features that I would like to integrate into the website are:
 <!-- LICENSE -->
 ## Notes
 
-The source code for the calendar used on the website was pulled from https://github.com/brospars/simple-calendar and manipulated. Author of the Simple Calendar grants permission to any person to use, copy, modify, or publish the code. All documents regarding the Simple Calendar code are located in /static/calendar.
+The source code for the calendar used on the website was pulled and maniputlated from [Simple Calendar](https://github.com/brospars/simple-calendar). Author of the Simple Calendar grants permission to any person to use, copy, modify, or publish the code. All documents regarding the Simple Calendar code are located in /static/calendar.
 
 
 
@@ -140,7 +138,7 @@ The source code for the calendar used on the website was pulled from https://git
 ## Contact
 
 Berkley Olmstead
-- olms2074@gmail.com
-- [Linkedin](https://www.linkedin.com/in/berkleyolmstead/)
+olms2074@gmail.com
+[Linkedin](https://www.linkedin.com/in/berkleyolmstead/)
 
 Project Link: [https://github.com/Bolmstead/Yoga](https://github.com/Bolmstead/Yoga)
