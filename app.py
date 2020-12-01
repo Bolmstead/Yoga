@@ -24,8 +24,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 # connect to database. drop all tables (if any) then create all tables
 connect_db(app)
-db.drop_all()
-db.create_all()
+# db.drop_all()
+# db.create_all()
 
 # toolbar = DebugToolbarExtension(app)
 
@@ -235,7 +235,7 @@ def class_signup(class_id):
         print(response.headers)
 
     except Exception as e:
-        print(e.message)
+        print(e)
     
     flash(f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time}", "success")
     return redirect("/")
@@ -270,7 +270,7 @@ def cancel_signup(class_id):
         print(response.headers)
 
     except Exception as e:
-        print(e.message)
+        print(e)
 
     flash("You have been removed from this class", "success")
     return redirect("/users/detail")
