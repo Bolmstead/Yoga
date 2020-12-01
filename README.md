@@ -92,7 +92,7 @@ Possible features that I would like to integrate into the website are:
 ## Bugs to be fixed
 
 A few bugs are still in the code and I am working to debug them:
-* SendGrid Email API function is not currently working. While the working code is included and commented out in the ```sh app. py``` file, my account needs approval before the automatic confirmation emails can be sent again. Once my account is approved, the code will be uncommented. 
+* SendGrid Email API function is not currently working. While the working code is included and commented out in the ```app.py``` file, my account needs approval before the automatic confirmation emails can be sent again. Once my account is approved, the code will be uncommented. 
 * Calendar sometimes doesn't show the colored circle on date of class, however the classes are still populating to the calendar and show after the date is clicked.
 * Timezones of the start and end times of the classes are saved to the database in the GMT timezone rather than MST. I have a Javascript workaround to show the correct times in the calendar, but currently working to debug this.
 <!-- LICENSE -->
