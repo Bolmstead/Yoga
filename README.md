@@ -101,7 +101,6 @@ For the sake of the capstone code review, any user can sign up to be an instruct
 
 The source code for the calendar used on the website was pulled and maniputlated from [Simple Calendar](https://github.com/brospars/simple-calendar). Author of the Simple Calendar grants permission to any person to use, copy, modify, or publish the code. All documents regarding the Simple Calendar code are located in /static/calendar.
 
-## Contact
 Enjoy!
 
 <!-- CONTACT -->
