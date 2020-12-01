@@ -92,3 +92,7 @@ class ClassAddForm(FlaskForm):
 # auth_token = '[AuthToken]' 
 # client = Client(account_sid, auth_token) 
 # message = sendgrid.Mail()
+
+
+# // temporary function to display element information in console to assist in debugging
+# document.addEventListener("click", function(e){console.dir(e.target)});

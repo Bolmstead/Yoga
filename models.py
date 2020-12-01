@@ -8,6 +8,7 @@ bcrypt = Bcrypt()
 db = SQLAlchemy()
 
 
+
 class Signups(db.Model):
     """Class to establish the many-to-many relationship between the 'users' and 
     'classes' tables. Shows which users have signed up for which classes"""

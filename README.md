@@ -77,14 +77,7 @@ To get a local copy up and running follow these steps:
   ```sh
   createdb yoga
   ```
-
-<!-- USAGE EXAMPLES -->
-###  Sendgrid API Setup (DO NOT FOLLOW. INCOMPLETE STEP)
-
-6. Create a free account with [SendGrid](https://signup.sendgrid.com/)
-7. Follow their instructions to obtain a free API key for the Email API
-8. ############# INCOMPLETE! (Get steps from mentor about how to approach this)
-
+6. Start a server in your projects directory and you are done!
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -97,8 +90,16 @@ Possible features that I would like to integrate into the website are:
 
 ############# INCOMPLETE! Working to completely set up API. Account is currently under review. Once receive full access to my account again, I will uncomment the appropriate code in my app.py to get it working.
 
+
+## Bugs to be fixed
+
+A few bugs are still in the code and I am working to debug them:
+* SendGrid Email API function is not currently working. It was working, however my account needs approval before automatic confrimation emails can be sent again. The email API code has been commented out and is located within app.py. Once working again, will uncomment code. 
+* Calendar sometimes doesn't show the colored circle on date of class, however the classes are still populating to the calendar and show after the date is clicked.
+* Timezones of the start and end times of the classes are saved to the database in the GMT timezone rather than MST. I have a Javascript workaround to correctly show the times in the calendar, but working to get the MST times in the database.
 <!-- LICENSE -->
 ## Notes
+For the sake of the capstone, any user can sign up to be an instructor on the website. This just allows anyone to view the instructor's functionality. If this website were to be implemented, instructors accounts would be created in a different way and require approval.
 
 The source code for the calendar used on the website was pulled and maniputlated from [Simple Calendar](https://github.com/brospars/simple-calendar). Author of the Simple Calendar grants permission to any person to use, copy, modify, or publish the code. All documents regarding the Simple Calendar code are located in /static/calendar.
 

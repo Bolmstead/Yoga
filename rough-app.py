@@ -6,8 +6,11 @@ from forms import *
 import email_validator
 
 # Import API libraries
+# from twilio.rest import Client 
 # import sendgrid
+# from sendgrid import SendGridAPIClient
 # from sendgrid.helpers.mail import Mail
+
 
 CURR_USER_KEY = "curr_user"
 SENDGRID_API_KEY = "will_put_something_here"
@@ -22,12 +25,18 @@ app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "thisisayogawebsiteformymom")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
-# connect to database. drop all tables (if any) then create all tables
 connect_db(app)
 db.drop_all()
 db.create_all()
 
-# toolbar = DebugToolbarExtension(app)
+toolbar = DebugToolbarExtension(app)
+
+## Email API initialization
+# account_sid = 'AC61fba0a85692bf29f107b606ce31b6cc' 
+# auth_token = '[AuthToken]' 
+# client = Client(account_sid, auth_token) 
+message = sendgrid.Mail()
+
 
 @app.before_request
 def add_user_to_g():
@@ -108,23 +117,23 @@ def signup():
         except IntegrityError as e:
             flash("Email already taken", 'danger')
             return render_template('users/signup.html', form=form)
-        
-        #Send email to user to confirm account creation
-        # message = Mail(
-        #     from_email='olms2074@gmail.com',
-        #     to_emails= user.email,
-        #     subject='Lunchtime Yoga Account Created',
-        #     html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To view open yoga classes please go to http://localhost:5000/#calendar_classes")
 
-        # try:
-        #     sg = SendGridAPIClient(os.environ[SENDGRID_API_KEY])
-        #     response = sg.send(message)
-        #     print(response.status_code)
-        #     print(response.body)
-        #     print(response.headers)
+        Send email to user to confirm account creation
+        message = Mail(
+            from_email='olms2074@gmail.com',
+            to_emails= form.email.data,
+            subject='Lunchtime Yoga Account Created',
+            html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To view open yoga classes please go to http://localhost:5000/#calendar_classes")
 
-        # except Exception as e:
-        #     print(e)
+        try:
+            sg = SendGridAPIClient(SENDGRID_API_KEY)
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+
+        except Exception as e:
+            print(e.message)
 
         # Login the newly registered user
         do_login(user)
