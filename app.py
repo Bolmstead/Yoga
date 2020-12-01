@@ -6,11 +6,11 @@ from forms import *
 import email_validator
 
 # Import API libraries
-# import sendgrid
-# from sendgrid.helpers.mail import Mail
+import sendgrid
+from sendgrid.helpers.mail import Mail
 
 CURR_USER_KEY = "curr_user"
-SENDGRID_API_KEY = "will_put_something_here"
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
 
 app = Flask(__name__)
 
@@ -24,7 +24,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 # connect to database. drop all tables (if any) then create all tables
 connect_db(app)
-
+db.drop_all()
+db.create_all()
 
 # toolbar = DebugToolbarExtension(app)
 
@@ -108,22 +109,22 @@ def signup():
             flash("Email already taken", 'danger')
             return render_template('users/signup.html', form=form)
         
-        #Send email to user to confirm account creation
-        # message = Mail(
-        #     from_email='olms2074@gmail.com',
-        #     to_emails= user.email,
-        #     subject='Lunchtime Yoga Account Created',
-        #     html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To view open yoga classes please go to http://localhost:5000/#calendar_classes")
+        # Send email to user to confirm account creation
+        message = Mail(
+            from_email='olms2074@gmail.com',
+            to_emails= user.email,
+            subject='Lunchtime Yoga Account Created',
+            html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To view open yoga classes please go to http://localhost:5000/#calendar_classes")
 
-        # try:
-        #     sg = SendGridAPIClient(os.environ[SENDGRID_API_KEY])
-        #     response = sg.send(message)
-        #     print(response.status_code)
-        #     print(response.body)
-        #     print(response.headers)
+        try:
+            sg = SendGridAPIClient(SENDGRID_API_KEY)
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
 
-        # except Exception as e:
-        #     print(e)
+        except Exception as e:
+            print(e)
 
         # Login the newly registered user
         do_login(user)
@@ -220,21 +221,21 @@ def class_signup(class_id):
     db.session.commit()
 
     # Send email to user confirming their class signup
-    # message = Mail(
-    #     from_email='olms2074@gmail.com',
-    #     to_emails= user.email,
-    #     subject='Yoga Class Signup Confirmation',
-    #     html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
+    message = Mail(
+        from_email='olms2074@gmail.com',
+        to_emails= user.email,
+        subject='Yoga Class Signup Confirmation',
+        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
 
-    # try:
-    #     sg = SendGridAPIClient(SENDGRID_API_KEY)
-    #     response = sg.send(message)
-    #     print(response.status_code)
-    #     print(response.body)
-    #     print(response.headers)
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
 
-    # except Exception as e:
-    #     print(e.message)
+    except Exception as e:
+        print(e.message)
     
     flash(f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time}", "success")
     return redirect("/")
@@ -255,21 +256,21 @@ def cancel_signup(class_id):
         
     db.session.commit()
 
-    # message = Mail(
-    #     from_email='olms2074@gmail.com',
-    #     to_emails= user.email,
-    #     subject='Yoga Class Signup Cancellation',
-    #     html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to http://localhost:5000/#calendar_classes")
+    message = Mail(
+        from_email='olms2074@gmail.com',
+        to_emails= user.email,
+        subject='Yoga Class Signup Cancellation',
+        html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to http://localhost:5000/#calendar_classes")
 
-    # try:
-    #     sg = SendGridAPIClient(SENDGRID_API_KEY)
-    #     response = sg.send(message)
-    #     print(response.status_code)
-    #     print(response.body)
-    #     print(response.headers)
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
 
-    # except Exception as e:
-    #     print(e.message)
+    except Exception as e:
+        print(e.message)
 
     flash("You have been removed from this class", "success")
     return redirect("/users/detail")
