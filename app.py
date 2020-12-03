@@ -24,8 +24,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 # connect to database. drop all tables (if any) then create all tables
 connect_db(app)
-# db.drop_all()
-# db.create_all()
+db.drop_all()
+db.create_all()
 
 # toolbar = DebugToolbarExtension(app)
 
