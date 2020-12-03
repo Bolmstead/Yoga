@@ -1,6 +1,7 @@
 /venv
-/__pychache__
+/__pycache__
 /Best-README-Template-master
 sendgrid.env
 test_code.py
-rough-app.pysendgrid.env
+rough-app.py
+sendgrid.env
