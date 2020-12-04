@@ -25,8 +25,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 # connect to database. drop all tables (if any) then create all tables
 connect_db(app)
 # if using local server and want to drop/add tables, use code below:
-db.drop_all()
-db.create_all()
+# db.drop_all()
+# db.create_all()
 
 
 # toolbar = DebugToolbarExtension(app)
@@ -116,7 +116,7 @@ def signup():
             from_email='olmssweeps@gmail.com',
             to_emails= user.email,
             subject='Lunchtime Yoga Account Created',
-            html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To view open yoga classes please go to http://localhost:5000/#calendar_classes")
+            html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To view open yoga classes please go to https://yoga-website.herokuapp.com/#calendar_classes")
 
         try:
             sg = SendGridAPIClient(SENDGRID_API_KEY)
@@ -229,7 +229,7 @@ def class_signup(class_id):
         from_email='olmssweeps@gmail.com',
         to_emails= user.email,
         subject='Yoga Class Signup Confirmation',
-        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
+        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to https://yoga-website.herokuapp.com/#calendar_classes")
 
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
@@ -264,7 +264,7 @@ def cancel_signup(class_id):
         from_email='olmssweeps@gmail.com',
         to_emails= user.email,
         subject='Yoga Class Signup Cancellation',
-        html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to http://localhost:5000/#calendar_classes")
+        html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to https://yoga-website.herokuapp.com/#calendar_classes")
 
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
@@ -387,7 +387,7 @@ def instructor_signs_user_up(class_id):
         from_email='olmssweeps@gmail.com',
         to_emails= user.email,
         subject='Yoga Class Signup Confirmation',
-        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
+        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to https://yoga-website.herokuapp.com/#calendar")
 
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)

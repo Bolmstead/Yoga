@@ -84,7 +84,7 @@
       // save results from JSON get request to variable and iterate through each item
       // If deployed to heroku use https://yoga-website.herokuapp.com/json for the GET request
       // If using on local server use http://localhost:5000/json for the GET request
-      const res = await axios.get('http://localhost:5000/json');
+      const res = await axios.get('https://yoga-website.herokuapp.com/json');
       for (let c of res.data) {
         // change time to MST to avoid converstion by adding to end of date string
         const startTimeToMst = c.start_date_time + ("-0700");
