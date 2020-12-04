@@ -62,8 +62,7 @@ def homepage():
 
     # If post method and validated, login user
     if form.validate_on_submit():
-        user = User.authenticate(form.email.data,
-                                 form.password.data)
+        user = User.authenticate(form.email.data, form.password.data)
        
         if user:
             do_login(user)
@@ -130,7 +129,7 @@ def signup():
 
         # Login the newly registered user
         do_login(user)
-
+        flash(f"You have created an account!", "success")
         return redirect("/")
     # If get method, render the page
     else:
@@ -229,7 +228,7 @@ def class_signup(class_id):
         from_email='olmssweeps@gmail.com',
         to_emails= user.email,
         subject='Yoga Class Signup Confirmation',
-        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to https://yoga-website.herokuapp.com/#calendar_classes")
+        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.class_date} starting at {yoga_class.start_time} at {yoga_class.location}! To view other open yoga classes please go to https://yoga-website.herokuapp.com/#calendar_classes")
 
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
@@ -241,7 +240,7 @@ def class_signup(class_id):
     except Exception as e:
         print(e)
     
-    flash(f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time}", "success")
+    flash(f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.class_date} starting at {yoga_class.start_time} at {yoga_class.location}", "success")
     return redirect("/")
 
 
@@ -264,7 +263,7 @@ def cancel_signup(class_id):
         from_email='olmssweeps@gmail.com',
         to_emails= user.email,
         subject='Yoga Class Signup Cancellation',
-        html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to https://yoga-website.herokuapp.com/#calendar_classes")
+        html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.class_date}. To reschedule this yoga classes please go to https://yoga-website.herokuapp.com/#calendar_classes")
 
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
@@ -276,7 +275,7 @@ def cancel_signup(class_id):
     except Exception as e:
         print(e)
 
-    flash("You have been removed from this class", "success")
+    flash(f"You have been removed from the {yoga_class.class_date} class.", "success")
     return redirect("/users/detail")
 
 
@@ -302,16 +301,24 @@ def add_class():
             flash("Class start time must be before class end time.", "danger")
             return redirect("/users/add_class")
 
-        # Attempted to add MST time zone to naive time object. Still comes out to be GMT
-        mtn_tz = pytz.timezone('US/Mountain')
-        start_dt_mtn = mtn_tz.localize(form.start_date_time.data)
-        end_dt_mtn = mtn_tz.localize(form.end_date_time.data)
+
+        start_dt = (form.start_date_time.data)
+        end_dt = (form.end_date_time.data)
+
+        class_date = start_dt.strftime("%B %d, %Y")
+
+        start_time = start_dt.strftime("%I:%M %p")
+
+        end_time = end_dt.strftime("%I:%M %p")
 
         yoga_class = YogaClass(
             instructor_id=user.id,
             location=form.location.data,
-            start_date_time=start_dt_mtn,
-            end_date_time=end_dt_mtn,
+            start_date_time=start_dt,
+            end_date_time=end_dt,
+            class_date = class_date,
+            start_time = start_time,
+            end_time = end_time,
             )
 
         db.session.add(yoga_class)

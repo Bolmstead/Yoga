@@ -60,9 +60,10 @@
 
             <a href="/users/signup" class="float-right btn btn-outline-primary">Sign up</a>
             <h4 class="card-title mb-4 mt-1">Sign in</h4>
-            <form method="POST" id="user_form">
-            
+            <form method="POST" id="login_form">
+              {{ form.csrf_token }}
               {% for field in form if field.widget.input_type != 'hidden' %}
+              
                 {% for error in field.errors %}
                     <span class="text-danger">{{ error }}</span>
                 {% endfor %}
@@ -71,7 +72,7 @@
               {% endfor %}
             
               <div class="form-group">
-                <br><button type="submit" class="btn btn-primary btn-block"> Login  </button>
+                <br><button class= "btn btn-primary btn-block"> Login </button>
               </div>  
 
             </form>

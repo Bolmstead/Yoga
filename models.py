@@ -1,4 +1,4 @@
-from datetime import datetime, date, time
+from datetime import datetime
 import pytz
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
@@ -79,6 +79,10 @@ class YogaClass(db.Model):
     start_date_time = db.Column(db.DateTime,)
     end_date_time = db.Column(db.DateTime,)
 
+    class_date = db.Column(db.String,)
+    start_time = db.Column(db.String,)
+    end_time = db.Column(db.String,)
+
     def serialize(self):
         """Serialize classes SQLAlchemy obj to dictionary."""
         return {
@@ -88,7 +92,6 @@ class YogaClass(db.Model):
             "start_date_time": self.start_date_time,
             "end_date_time": self.end_date_time,
         }
-    
 
 def connect_db(app):
     """Connect this database to Yoga Website."""
