@@ -6,7 +6,7 @@ from forms import *
 import email_validator
 
 # Import API libraries
-import sendgrid
+from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 CURR_USER_KEY = "curr_user"
@@ -24,6 +24,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 # connect to database. drop all tables (if any) then create all tables
 connect_db(app)
+db.drop_all()
+db.create_all()
 
 
 # toolbar = DebugToolbarExtension(app)
@@ -110,7 +112,7 @@ def signup():
         
         # Send email to user to confirm account creation
         message = Mail(
-            from_email='olms2074@gmail.com',
+            from_email='olmssweeps@gmail.com',
             to_emails= user.email,
             subject='Lunchtime Yoga Account Created',
             html_content=f"Thank you, {form.first_name.data} {form.last_name.data} for creating an account with Lunchtime Yoga for Professionals! To view open yoga classes please go to http://localhost:5000/#calendar_classes")
@@ -155,7 +157,9 @@ def user_detail():
         return redirect("/")
 
     user = g.user
-    return render_template('users/detail.html', user=user)
+    all_users = User.query.all()
+
+    return render_template('users/detail.html', user=user, all_users=all_users)
 
 
 @app.route('/users/edit', methods=["GET", "POST"])
@@ -221,7 +225,7 @@ def class_signup(class_id):
 
     # Send email to user confirming their class signup
     message = Mail(
-        from_email='olms2074@gmail.com',
+        from_email='olmssweeps@gmail.com',
         to_emails= user.email,
         subject='Yoga Class Signup Confirmation',
         html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
@@ -256,7 +260,7 @@ def cancel_signup(class_id):
     db.session.commit()
 
     message = Mail(
-        from_email='olms2074@gmail.com',
+        from_email='olmssweeps@gmail.com',
         to_emails= user.email,
         subject='Yoga Class Signup Cancellation',
         html_content=f"You have been removed from {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}. To reschedule this yoga classes please go to http://localhost:5000/#calendar_classes")
@@ -344,6 +348,58 @@ def delete_class(class_id):
         return redirect("/")
 
 
+@app.route('/classes/instructor_signs_user_up/<int:class_id>/<int:user_id>', methods=["POST"])
+def instructor_signs_user_up(class_id):
+    """Instructor adds a user to a class"""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    # Grab yoga class from database and save logged in user to variable
+    yoga_class = YogaClass.query.get_or_404(class_id)
+    user = g.user
+
+    # if instructor tries to sign up for own class, redirect and flash error
+    if user.id == yoga_class.instructor_id:
+        flash("Signup not complete. You are unable to signup for your own class.",'danger')
+        return redirect("/")   
+
+    if len(yoga_class.users) >= 6:
+        flash("There are no more spots in this class. Please see calendar for more classes.",'danger')
+        return redirect("/")
+
+    try: 
+        signup = Signups(
+        user_id=user.id,
+        class_id=yoga_class.id,)
+
+    except IntegrityError as e:
+        flash("You have already registered for this class", 'danger')
+        return redirect("/")
+
+    db.session.add(signup)
+    db.session.commit()
+
+    # Send email to user confirming their class signup
+    message = Mail(
+        from_email='olmssweeps@gmail.com',
+        to_emails= user.email,
+        subject='Yoga Class Signup Confirmation',
+        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to http://localhost:5000/#calendar_classes")
+
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+
+    except Exception as e:
+        print(e)
+    
+    flash(f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time}", "success")
+    return redirect("/")
 ################## JSON ENDPOINT  #####################################
 
 @app.route('/json')
