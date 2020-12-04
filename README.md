@@ -5,7 +5,7 @@
   <p align="center">
     A mobile responsive website to allow users/instructors to create, schedule, and signup for yoga classes in Boise, Idaho.
     <br />
-    <a href="https://yoga-website.herokuapp.com/">View Heroku Demo</a>  <a href="https://github.com/Bolmstead/Yoga"><strong>Explore the docs »</strong><a>
+    <a href="https://yoga-website.herokuapp.com/">View Heroku Demo</a>
   </p>
 </p>
 
@@ -20,7 +20,7 @@ This project was created as the Capstone 1 project for the Springboard Software 
 * Signup for available yoga classes using the website's javascript calendar.
 * View enrolled yoga classes and cancel any class signup.
 * Edit their account information.
-* (soon) Receive automatic emails to confirm their yoga class signup, signup cancellation, or account creation.
+* Receive automatic emails to confirm their yoga class signup, signup cancellation, or account creation.
 
 
 Instructors are able to do all of the above while having the ability to:
@@ -46,10 +46,9 @@ The coding languages, frameworks, source code, and API that I used to build this
 * [WTForms](https://wtforms.readthedocs.io/en/2.3.x/)
 * [Font Awesome](https://fontawesome.com/)
 * [Simple Calendar](https://github.com/brospars/simple-calendar)
-* [Send Grid Email API](https://sendgrid.com/docs/api-reference/)
+* [SendGrid Email API](https://sendgrid.com/docs/api-reference/)
 
 
-<!-- GETTING STARTED -->
 ## How to Run the Project
 
 To get a local copy up and running follow these steps:
@@ -79,7 +78,7 @@ To get a local copy up and running follow these steps:
   ```
 6. Start a server in your projects directory and you are done!
 
-<!-- ROADMAP -->
+
 ## Roadmap
 
 Possible features that I would like to integrate into the website are:
@@ -89,13 +88,6 @@ Possible features that I would like to integrate into the website are:
 * Google calendar API that would allow a user to save their class signup to their google calendar. Also could be used for instructors when they create a class.
 
 
-## Bugs to be fixed
-
-A few bugs are still in the code and I am working to debug them:
-* SendGrid Email API function is not currently working. While the working code is included and commented out in the ```app.py``` file, my account needs approval before the automatic confirmation emails can be sent again. Once my account is approved, the code will be uncommented. 
-* Calendar sometimes doesn't show the colored circle on date of class, however the classes are still populating to the calendar and show after the date is clicked.
-* Timezones of the start and end times of the classes are saved to the database in the GMT timezone rather than MST. I have a Javascript workaround to show the correct times in the calendar, but currently working to debug this.
-<!-- LICENSE -->
 ## Notes
 For the sake of the capstone code review, any user can sign up to be an instructor on the website. This just allows anyone to view the instructor's functionality. If this website were to be implemented, instructors accounts would be created in a different way requiring approval.
 
@@ -103,7 +95,7 @@ The source code for the calendar used on the website was pulled and maniputlated
 
 Enjoy!
 
-<!-- CONTACT -->
+
 ## Contact
 
 Berkley Olmstead - olms2074@gmail.com - [Linkedin](https://www.linkedin.com/in/berkleyolmstead/)

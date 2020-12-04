@@ -305,10 +305,9 @@ def add_class():
         start_dt = (form.start_date_time.data)
         end_dt = (form.end_date_time.data)
 
+        # Create readable dates and times that allow access to on HTML through Jinja
         class_date = start_dt.strftime("%B %d, %Y")
-
         start_time = start_dt.strftime("%I:%M %p")
-
         end_time = end_dt.strftime("%I:%M %p")
 
         yoga_class = YogaClass(
