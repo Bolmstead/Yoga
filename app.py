@@ -4,6 +4,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from forms import *
 import email_validator
+from flask_cors import CORS, cross_origin
 
 # Import API libraries
 from sendgrid import SendGridAPIClient
@@ -14,6 +15,9 @@ SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
 
 app = Flask(__name__)
 
+# to fix CORS error
+cors = CORS(app)
+
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL',"postgres:///yoga")
@@ -21,6 +25,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "thisisayogawebsiteformymom")
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # connect to database. drop all tables (if any) then create all tables
 connect_db(app)
@@ -56,6 +61,7 @@ def do_logout():
 
 
 @app.route('/', methods=["GET", "POST"])
+@cross_origin()
 def homepage():
     """Show homepage: """
     form = LoginForm()

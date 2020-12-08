@@ -50,6 +50,8 @@
           {% endif%}
           <form method="POST" action="/classes/delete/{{ c.id }}">
           <br><button type="submit" class="btn btn-light btn-sm active card-button">Delete Class</button></form>
+        </div>
+      </div>
     {% endfor %}
     {% elif user.is_instructor and not user.classes_teaching %}
     <br>
