@@ -183,13 +183,29 @@ class FlaskTests(TestCase):
             self.assertIsNone(session.get('CURR_USER_KEY'))
             self.assertIn('id="create-account-title">Create Account</h1>', html)
 
-    # def test_signup_function(self):
-    #     """Make sure a user's account is created and they are logged in after account registration"""
 
-    #     with app.test_client() as client:
+    def test_successful_signup(self):
+        """Make sure a user is redirected after signup"""
 
-    #         resp = client.post('/users/signup', data={"text": "Hello"})
-    #         html = resp.get_data(as_text=True)
+        with app.test_client() as client:
+
+            resp = client.post('/users/signup', data={
+                'id': '1212',
+                'is_instructor': 'y',
+                'password': 'password',
+                'email': 'email@email.com',
+                'first_name': 'Jim',
+                'last_name': 'Halpert',
+                'phone': '8888888888',
+                }, follow_redirects=True)
+
+            user_jim = User.query.get(1212)
+
+            html = resp.get_data(as_text=True)
+            self.assertEqual(resp.status_code, 200)
+            self.assertEqual(user_jim.id, 1212)
+            self.assertIn('You have created an account!', html)
+            self.assertIn('<h1>Lunchtime Yoga for Professionals</h1>', html)
 
 
     # def test_cancel_signup_function(self):
