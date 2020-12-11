@@ -91,9 +91,6 @@
         // change time to MST to avoid converstion by adding to end of date string
         const startTimeToMst = c.start_date_time + ("-0700");
         const endTimeToMst = c.end_date_time + ("-0700");
-        // create new date object using the MST date string
-        const startDateObj = new Date(startTimeToMst);
-        const endDateObj = new Date(endTimeToMst);
         // create event object using modified start/end datetimes
         const eventObj = { startDate: startTimeToMst,
                           endDate: endTimeToMst, 

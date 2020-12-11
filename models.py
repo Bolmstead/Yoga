@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+from pytz import timezone
 import pytz
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
@@ -74,14 +75,15 @@ class YogaClass(db.Model):
     __tablename__ = 'classes'
 
     id = db.Column( db.Integer, primary_key=True,)
-    instructor_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="cascade"),)
-    location = db.Column(db.String,)
-    start_date_time = db.Column(db.DateTime,)
-    end_date_time = db.Column(db.DateTime,)
+    instructor_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="cascade"), nullable=False,)
+    location = db.Column(db.String, nullable=False,)
+    start_date_time = db.Column(db.DateTime, nullable=False,)
+    end_date_time = db.Column(db.DateTime, nullable=False,)
 
-    class_date = db.Column(db.String,)
-    start_time = db.Column(db.String,)
-    end_time = db.Column(db.String,)
+    class_date = db.Column(db.String, nullable=False,)
+    start_time = db.Column(db.String, nullable=False,)
+    end_time = db.Column(db.String, nullable=False,)
+    
 
     def serialize(self):
         """Serialize classes SQLAlchemy obj to dictionary."""

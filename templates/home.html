@@ -39,7 +39,7 @@
         {% if g.user and not g.user.is_instructor %}
         <br><br><br>
         <div class="mx-auto greeting-box text-center">
-          <h4 class="card-title mb-4 mt-1 text-center">Hi, {{ g.user.first_name }}</h4><br><br>
+          <h4 class="card-title mb-4 mt-1 text-center" id="home-greeting">Hi, {{ g.user.first_name }}</h4><br><br>
         </div><br>
         <div class="form-group">
           <a class="nav-link" href="/#calendar_classes"><button type="button" class="btn btn-success btn-block btn-lg">View available classes</button></a>
@@ -49,7 +49,7 @@
         {% elif g.user and g.user.is_instructor %}
         <br><br><br><br>
         <div class="mx-auto greeting-box text-center">
-          <h4 class="card-title mb-4 mt-1">Hi, {{ g.user.first_name }}</h4><br><br>
+          <h4 class="card-title mb-4 mt-1" id="instructor-greeting">Hi, {{ g.user.first_name }}</h4><br><br>
         </div>
         <div class="form-group">
           <a class="nav-link" href="/users/detail"><button type="button" class="btn btn-success btn-block btn-lg">Instructor Access</button></a>
@@ -59,7 +59,7 @@
           <article class="card-body">
 
             <a href="/users/signup" class="float-right btn btn-outline-primary">Sign up</a>
-            <h4 class="card-title mb-4 mt-1">Sign in</h4>
+            <h4 class="card-title mb-4 mt-1" id="home-h4">Sign in</h4>
             <form method="POST" id="login_form">
               {{ form.csrf_token }}
               {% for field in form if field.widget.input_type != 'hidden' %}

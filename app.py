@@ -154,7 +154,7 @@ def logout():
 
 ###################### USER ACCESS ########################
 
-@app.route('/users/detail', methods=["GET", "POST"])
+@app.route('/users/detail')
 def user_detail():
     """Show information of the logged in user"""
 
@@ -292,6 +292,10 @@ def add_class():
     """ Allows instructor to add a class"""
 
     #if user is not an instructor, redirect to homepage with flash error
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
     if not g.user.is_instructor:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -307,24 +311,36 @@ def add_class():
             flash("Class start time must be before class end time.", "danger")
             return redirect("/users/add_class")
 
-
+        # Grab start and end datetime objects
         start_dt = (form.start_date_time.data)
         end_dt = (form.end_date_time.data)
 
+        # Localize the dt objects to MST timezone
+        western_tz = timezone('US/Mountain')
+        start_dt_tz = western_tz.localize(start_dt)
+        end_dt_tz = western_tz.localize(end_dt)
+
         # Create readable dates and times that allow access to on HTML through Jinja
-        class_date = start_dt.strftime("%B %d, %Y")
-        start_time = start_dt.strftime("%I:%M %p")
-        end_time = end_dt.strftime("%I:%M %p")
+        class_date = start_dt_tz.strftime("%B %d, %Y")
+        start_time = start_dt_tz.strftime("%I:%M %p")
+        end_time = end_dt_tz.strftime("%I:%M %p")
+
+        # #print all variables
+        print("start_date_time", dir(start_dt_tz,))
+        print("end_date_time", end_dt_tz,)
+        print("class_date", class_date,)
+        print("start_time", start_time,)
+        print("end_time", end_time,)
 
         yoga_class = YogaClass(
             instructor_id=user.id,
             location=form.location.data,
-            start_date_time=start_dt,
-            end_date_time=end_dt,
+            start_date_time=start_dt_tz,
+            end_date_time=end_dt_tz,
             class_date = class_date,
             start_time = start_time,
             end_time = end_time,
-            )
+        )
 
         db.session.add(yoga_class)
         db.session.commit()
@@ -361,58 +377,58 @@ def delete_class(class_id):
         return redirect("/")
 
 
-@app.route('/classes/instructor_signs_user_up/<int:class_id>/<int:user_id>', methods=["POST"])
-def instructor_signs_user_up(class_id):
-    """Instructor adds a user to a class"""
+# @app.route('/classes/instructor_signs_user_up/<int:class_id>/<int:user_id>', methods=["POST"])
+# def instructor_signs_user_up(class_id):
+#     """Instructor adds a user to a class"""
 
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/")
+#     if not g.user:
+#         flash("Access unauthorized.", "danger")
+#         return redirect("/")
 
-    # Grab yoga class from database and save logged in user to variable
-    yoga_class = YogaClass.query.get_or_404(class_id)
-    user = g.user
+#     # Grab yoga class from database and save logged in user to variable
+#     yoga_class = YogaClass.query.get_or_404(class_id)
+#     user = g.user
 
-    # if instructor tries to sign up for own class, redirect and flash error
-    if user.id == yoga_class.instructor_id:
-        flash("Signup not complete. You are unable to signup for your own class.",'danger')
-        return redirect("/")   
+#     # if instructor tries to sign up for own class, redirect and flash error
+#     if user.id == yoga_class.instructor_id:
+#         flash("Signup not complete. You are unable to signup for your own class.",'danger')
+#         return redirect("/")   
 
-    if len(yoga_class.users) >= 6:
-        flash("There are no more spots in this class. Please see calendar for more classes.",'danger')
-        return redirect("/")
+#     if len(yoga_class.users) >= 6:
+#         flash("There are no more spots in this class. Please see calendar for more classes.",'danger')
+#         return redirect("/")
 
-    try: 
-        signup = Signups(
-        user_id=user.id,
-        class_id=yoga_class.id,)
+#     try: 
+#         signup = Signups(
+#         user_id=user.id,
+#         class_id=yoga_class.id,)
 
-    except IntegrityError as e:
-        flash("You have already registered for this class", 'danger')
-        return redirect("/")
+#     except IntegrityError as e:
+#         flash("You have already registered for this class", 'danger')
+#         return redirect("/")
 
-    db.session.add(signup)
-    db.session.commit()
+#     db.session.add(signup)
+#     db.session.commit()
 
-    # Send email to user confirming their class signup
-    message = Mail(
-        from_email='olmssweeps@gmail.com',
-        to_emails= user.email,
-        subject='Yoga Class Signup Confirmation',
-        html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to https://yoga-website.herokuapp.com/#calendar")
+#     # Send email to user confirming their class signup
+#     message = Mail(
+#         from_email='olmssweeps@gmail.com',
+#         to_emails= user.email,
+#         subject='Yoga Class Signup Confirmation',
+#         html_content=f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time} at {yoga_class.location}! To view other open yoga classes please go to https://yoga-website.herokuapp.com/#calendar")
 
-    try:
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
+#     try:
+#         sg = SendGridAPIClient(SENDGRID_API_KEY)
+#         response = sg.send(message)
+#         print(response.status_code)
+#         print(response.body)
+#         print(response.headers)
 
-    except Exception as e:
-        print(e)
+#     except Exception as e:
+#         print(e)
     
-    flash(f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time}", "success")
-    return redirect("/")
+#     flash(f"You have signed up for {yoga_class.instructor.first_name}'s yoga class on {yoga_class.start_date_time}", "success")
+#     return redirect("/")
 ################## JSON ENDPOINT  #####################################
 
 @app.route('/json')
