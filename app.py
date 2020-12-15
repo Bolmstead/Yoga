@@ -31,8 +31,8 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # connect to database. drop all tables (if any) then create all tables
 connect_db(app)
 # if using local server and want to drop/add tables, use code below:
-# db.drop_all()
-# db.create_all()
+db.drop_all()
+db.create_all()
 
 
 # toolbar = DebugToolbarExtension(app)

@@ -18,6 +18,7 @@ class UserModelTestCase(TestCase):
         db.drop_all()
         db.create_all()
 
+        # Create instance of user
         user1 = User.signup(
             is_instructor=False,
             password="password",
@@ -30,6 +31,7 @@ class UserModelTestCase(TestCase):
         user1_id = 1111
         user1.id = user1_id
 
+        # Create instance of instructor
         instructor1 = User.signup(
             is_instructor=True,
             password="password",
@@ -101,6 +103,7 @@ class UserModelTestCase(TestCase):
 
 
     def test_invalid_email_signup(self):
+        """Does Integrity Error raise when create user with invalid email?"""
         invalid = User.signup(
             is_instructor=True,
             password="password",
@@ -115,6 +118,8 @@ class UserModelTestCase(TestCase):
             db.session.commit()
     
     def test_invalid_password_signup(self):
+        """Does Integrity Error raise when create user with invalid password?"""
+
         with self.assertRaises(ValueError) as context:
             User.signup(
                 is_instructor=False,
@@ -136,6 +141,8 @@ class UserModelTestCase(TestCase):
             )
 
     def test_invalid_first_name_signup(self):
+        """Does Integrity Error raise when create user with invalid first_name?"""
+
         invalid = User.signup(
             is_instructor=True,
             password="password",
@@ -150,6 +157,8 @@ class UserModelTestCase(TestCase):
             db.session.commit()
 
     def test_invalid_last_name_signup(self):
+        """Does Integrity Error raise when create user with invalid last_name?"""
+
         invalid = User.signup(
             is_instructor=True,
             password="password",
@@ -164,6 +173,8 @@ class UserModelTestCase(TestCase):
             db.session.commit()
 
     def test_invalid_phone_signup(self):
+        """Does Integrity Error raise when create user with invalid phone number?"""
+
         invalid = User.signup(
             is_instructor=True,
             password="password",

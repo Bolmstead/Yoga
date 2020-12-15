@@ -18,6 +18,7 @@ class YogaClassModelTestCase(TestCase):
         db.drop_all()
         db.create_all()
 
+        # Create instance of a User
         user1 = User.signup(
             is_instructor=False,
             password="password",
@@ -30,6 +31,7 @@ class YogaClassModelTestCase(TestCase):
         user1_id = 1111
         user1.id = user1_id
 
+        # Create instance of an Instructor
         instructor1 = User.signup(
             is_instructor=True,
             password="password",
@@ -45,7 +47,7 @@ class YogaClassModelTestCase(TestCase):
         self.start_dt_obj = datetime.strptime('2020-12-12 22:00:00-07:00', '%Y-%m-%d %H:%M:%S%z')
         self.end_dt_obj = datetime.strptime('2020-12-12 23:00:00-07:00', '%Y-%m-%d %H:%M:%S%z')
 
-
+        # Create instance of a yoga class
         yoga_class1 = YogaClass(
             instructor_id=2222,
             location="Paris",
@@ -90,6 +92,7 @@ class YogaClassModelTestCase(TestCase):
     
     # ###
     def test_valid_class(self):
+        """Did the yoga_class instance creation work successfully?"""
 
         self.assertIsNotNone(self.yoga_class1)
         self.assertEqual(self.yoga_class1.instructor_id, 2222)
@@ -102,6 +105,8 @@ class YogaClassModelTestCase(TestCase):
 
 
     def test_invalid_class_instructor_id(self):
+        """Does Integrity Error raise when create yoga class with invalid instructor_id?"""
+
         invalid = YogaClass(
             instructor_id=None,
             location="Paris",
@@ -120,6 +125,8 @@ class YogaClassModelTestCase(TestCase):
             db.session.commit()
     
     def test_invalid_class_location(self):
+        """Does Integrity Error raise when create yoga class with invalid location?"""
+
         invalid = YogaClass(
             instructor_id=2222,
             location=None,
@@ -138,6 +145,8 @@ class YogaClassModelTestCase(TestCase):
             db.session.commit()
 
     def test_invalid_class_start_dt(self):
+        """Does Integrity Error raise when create yoga class with invalid start_date_time?"""
+
         invalid = YogaClass(
             instructor_id=2222,
             location="Paris",
@@ -157,6 +166,8 @@ class YogaClassModelTestCase(TestCase):
         
 
     def test_invalid_class_end_dt(self):
+        """Does Integrity Error raise when create yoga class with invalid end_date_time?"""
+
         invalid = YogaClass(
             instructor_id=2222,
             location="Paris",

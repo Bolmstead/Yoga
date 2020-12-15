@@ -19,6 +19,7 @@ class SignupsModelTestCase(TestCase):
         db.drop_all()
         db.create_all()
 
+        # Create instance of user
         user1 = User.signup(
             is_instructor=False,
             password="password",
@@ -31,6 +32,7 @@ class SignupsModelTestCase(TestCase):
         user1_id = 1111
         user1.id = user1_id
 
+        # Create instance of instructor
         instructor1 = User.signup(
             is_instructor=True,
             password="password",
@@ -46,7 +48,7 @@ class SignupsModelTestCase(TestCase):
         self.start_dt_obj = datetime.strptime('2020-12-12 22:00:00-07:00', '%Y-%m-%d %H:%M:%S%z')
         self.end_dt_obj = datetime.strptime('2020-12-12 23:00:00-07:00', '%Y-%m-%d %H:%M:%S%z')
 
-
+        # Create instance of yoga class
         yoga_class1 = YogaClass(
             instructor_id=2222,
             location="Paris",
@@ -63,6 +65,7 @@ class SignupsModelTestCase(TestCase):
         db.session.add(yoga_class1)
         db.session.commit()
 
+        # Create instance of a user1 signup for yoga_class1
         signup1 = Signups(
             user_id=1111,
             class_id=3333,
@@ -93,12 +96,12 @@ class SignupsModelTestCase(TestCase):
         self.assertEqual(self.signup1.class_id, 3333)
 
     def test_user_class_signup(self):
-
+        """Can a user signup for a class"""
         self.assertEqual(len(self.user1.classes_signed_up), 1)
         self.assertEqual(self.user1.classes_signed_up[0].id, 3333)
 
     def test_user_invalid_class_signup(self):
-
+        """Does an error raise when an invalid signup occurs"""
         invalid = Signups(
             user_id=None,
             class_id=4444,

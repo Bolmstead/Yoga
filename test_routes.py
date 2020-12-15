@@ -24,6 +24,7 @@ class FlaskTests(TestCase):
 
         self.client = app.test_client()
 
+        # Create instance of a user (not instructor)
         user1 = User.signup(
             is_instructor=False,
             password="password",
@@ -36,6 +37,7 @@ class FlaskTests(TestCase):
         user1_id = 1111
         user1.id = user1_id
 
+        # Create instance of an instructor
         instructor1 = User.signup(
             is_instructor=True,
             password="password",
@@ -48,9 +50,9 @@ class FlaskTests(TestCase):
         instructor1_id = 2222
         instructor1.id = instructor1_id
 
+        # Create instance of a yoga class
         self.start_dt_obj = datetime.strptime('2020-12-12 22:00:00-07:00', '%Y-%m-%d %H:%M:%S%z')
         self.end_dt_obj = datetime.strptime('2020-12-12 23:00:00-07:00', '%Y-%m-%d %H:%M:%S%z')
-
 
         yoga_class1 = YogaClass(
             instructor_id=2222,
@@ -68,6 +70,7 @@ class FlaskTests(TestCase):
         db.session.add(yoga_class1)
         db.session.commit()
 
+        # Create instance of a user1 signup for yoga_class1
         signup1 = Signups(
             user_id=1111,
             class_id=3333,
@@ -98,8 +101,12 @@ class FlaskTests(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
+
+            # Determine user is not logged in
             self.assertIsNone(session.get('CURR_USER_KEY'))
             self.assertIn('<span>Ready for a break from the chaos?', html)
+
+            # Following HTML only shows for a user not logged in
             self.assertIn('id="home-h4">Sign in</h4>', html)
 
 
@@ -116,10 +123,10 @@ class FlaskTests(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn('<span>Ready for a break from the chaos?', html)
 
-            # The following HTML only shows for this instructor when logged in
+            # Following HTML only shows for this instructor when logged in
             self.assertIn('id="home-greeting">Hi, Bob', html)
 
-            # The following HTML only shows for a logged in user (not instructor)
+            # Following HTML only shows for a logged in user (not instructor)
             self.assertIn('btn-block btn-lg">View your enrolled classes', html)
 
 
@@ -136,10 +143,10 @@ class FlaskTests(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn('<span>Ready for a break from the chaos?', html)
 
-            # The following HTML only shows for this instructor when logged in
+            # Following HTML only shows for this instructor when logged in
             self.assertIn('id="instructor-greeting">Hi, Verna', html)
 
-            # The following HTML only shows for a logged in instructor
+            # Following HTML only shows for a logged in instructor
             self.assertIn('btn-lg">Instructor Access</button></a>', html)
 
 
@@ -170,6 +177,7 @@ class FlaskTests(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
+            # Determine user is not logged in
             self.assertIsNone(session.get('CURR_USER_KEY'))
             self.assertIn('id="create-account-title">Create Account</h1>', html)
 
@@ -186,6 +194,7 @@ class FlaskTests(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
+            # Determine user is not logged in
             self.assertIsNone(session.get('CURR_USER_KEY'))
             self.assertIn('id="create-account-title">Create Account</h1>', html)
 
@@ -207,8 +216,7 @@ class FlaskTests(TestCase):
 
             resp = client.post('/users/signup', data=user_jim, follow_redirects=True)
             html = resp.get_data(as_text=True)
-            user_jimm = User.query.get(1212)
-
+            user_jim_database = User.query.get(1212)
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn('You have created an account!', html)
@@ -266,6 +274,7 @@ class FlaskTests(TestCase):
             resp = client.get('/users/edit')
             html = resp.get_data(as_text=True)
 
+            # Determine user is not logged in
             self.assertIsNone(session.get('CURR_USER_KEY'))
             self.assertEqual(resp.status_code, 302)
 
@@ -314,6 +323,7 @@ class FlaskTests(TestCase):
             resp = client.get('/users/add_class', follow_redirects=True)
             html = resp.get_data(as_text=True)
 
+            # Determine user is not logged in
             self.assertIsNone(session.get('CURR_USER_KEY'))
             self.assertEqual(resp.status_code, 200)
             self.assertIn('Access unauthorized. You must log in.', html)
@@ -385,6 +395,7 @@ class FlaskTests(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn('You have logged out', html)
+            # Determine user is not logged in
             self.assertIsNone(session.get('CURR_USER_KEY'))
 
 
