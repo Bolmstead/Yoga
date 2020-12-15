@@ -2,41 +2,56 @@
 
 
 {% block content %}
-<br>
-<div class="backg-gray"></div>
-  <div class="card text-center col-sm-10 col-md-8 col-lg-6 mx-auto my-auto shadow card-body" >
-    <div class="col-sm-10 col-md-10 mx-auto my-1">
-      <h1 class="join-message">Create Class</h1><br>
 
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category,msg in messages %}
-          <div class="alert alert-{{ category }}" role="alert">
-            {{msg}}
-          </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-
-      <div class="row justify-content-sm-center">
-        <div class="col-md-10 form-group">
-          <form method="POST" id="user_form">
-            {{ form.hidden_tag() }}
-            {% for field in form if field.widget.input_type != 'hidden' %}
-              {% for error in field.errors %}
-                <span class="text-danger">{{ error }}</span>
-              {% endfor %}
-              {% if field.id == 'is_instructor' %}
-                {{ field.label }} 
-              {% endif %}
-              {{ field(placeholder=field.label.text, class="form-control") }}
+<div class="container-fluid">
+  <div class="form-background pos-relative">
+    <div class="row">
+      <div class="col-md-4 offset-md-4 alertbox text-center">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category,msg in messages %}
+              <div class="alert alert-{{ category }}" role="alert">
+                {{msg}}
+              </div>
             {% endfor %}
-      
-            <button class="btn btn-primary btn-lg btn-block">Create Class</button>
-          </form>
+          {% endif %}
+        {% endwith %}
+      </div>
+    </div><br>
+  
+    {% if not messages %}
+    <br><br><br><br>
+    {% endif %}
+  
+      <div class="card text-center col-sm-10 col-md-8 col-lg-6 shadow card-body pos-absolute" id="class-create-card">
+        <div class="card-body">
+  
+            <article class="card-body">
+  
+              <h4 class="card-title mb-4 mt-1 text-center" id="home-h4">Create Class</h4>
+              <form method="POST" id="login_form">
+                {{ form.csrf_token }}
+                {% for field in form if field.widget.input_type != 'hidden' %}
+                
+                  {% for error in field.errors %}
+                      <span class="text-danger">{{ error }}</span>
+                  {% endfor %}
+                  {% if field.id == 'is_instructor' %}
+                      {{ field.label }} 
+                    {% endif %}
+                    {{ field(placeholder=field.label.text, class="form-control") }}
+                    
+                {% endfor %}
+              
+                <div class="form-group">
+                  <button class="btn btn-primary btn-lg btn-block">Create Class</button>
+                </div>  
+  
+              </form>
+            </article>
         </div>
       </div>
     </div>
   </div>
-</div>
+
 {% endblock %}

@@ -51,18 +51,20 @@ nav + .container {
 /* ====== Home Page ======  */
 
 .background-image {
-	background-image: url("/static/images/yoga_bg.jpg");
+	background-image: url("/static/images/Wallpaper3.jpg");
 	height: 800px;
 	width: 100%;
-   }
+	background-repear: no-repeat;
+	background-size: cover;
+}
 
 @media (max-width: 992px) {
 	.background-image {
-		background-image: url("/static/images/yoga_bg.jpg");
+		background-image: url("/static/images/Wallpaper3.jpg");
 		height: 1000px;
 		width: 100%;
 	   }	
-	}
+}
 	
 .container-fluid {
 		padding: 0px;
@@ -79,13 +81,25 @@ nav + .container {
 }
 
 #signup-card {
-	width: 450px;
-	height: 400px;
-	margin: auto;
-	top: 0;
+	height: 600px;
+	margin-left: auto;
+	margin-right: auto;
+	top: 50px;
 	bottom: 0;
-	left: 0;
 	right: 0;
+	left: 0;
+
+}
+
+#class-create-card {
+	height: 400px;
+	margin-left: auto;
+	margin-right: auto;
+	top: 50px;
+	bottom: 0;
+	right: 0;
+	left: 0;
+
 }
 
 .col-centered {
@@ -134,6 +148,24 @@ nav + .container {
 	padding: 12px;
 }
 
+.form-background {
+	background-image: url("/static/images/Wallpaper2.jpg");
+	height: 100vh;
+	width: 100%;
+	background-repear: no-repeat;
+	background-size: cover;
+
+}
+
+.class-create-background {
+	background-image: url("/static/images/Color.jpg");
+	height: 100vh;
+	width: 100%;
+	background-repear: repeat;
+	background-size: cover;
+
+}
+
 /* ====== 404 Page ======  */
 
 .message-404 {
@@ -162,7 +194,12 @@ nav + .container {
 
 .pos-relative {
 	position: relative;
-  }
+}
+
+.pos-absolute {
+	position: absolute;
+}
+
 
 .btn {
 	border-radius: 0px;
@@ -177,3 +214,4 @@ nav + .container {
 	right: 15px;
 	bottom: 15px;
 }
+

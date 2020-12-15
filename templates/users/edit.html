@@ -3,8 +3,8 @@
 
 {% block content %}<br>
 <div class="card text-center col-sm-10 col-md-8 col-lg-6 mx-auto my-auto shadow card-body">
-  <div class="col-sm-10 col-md-10 mx-auto my-1">
-    <h2 class="join-message">Edit Profile</h2>
+    <div class="col-sm-10 col-md-10 mx-auto my-1">
+      <h2 class="join-message">Edit Profile</h2>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -16,32 +16,31 @@
         {% endif %}
       {% endwith %}
 
-    <div class="row justify-content-sm-center">
-      <div class="col-md-10 form-group">
-        <form method="POST" id="user_form">
-          {{ form.hidden_tag() }}
+  <div class="row justify-content-sm-center">
+    <div class="col-md-10 form-group">
+      <form method="POST" id="user_form">
+        {{ form.hidden_tag() }}
 
-          {% for field in form if field.widget.input_type != 'hidden' and field.name != 'password' %}
-            {% for error in field.errors %}
-              <span class="text-danger">{{ error }}</span>
-            {% endfor %}
-            {{ field(placeholder=field.label.text, class="form-control") }}
+        {% for field in form if field.widget.input_type != 'hidden' and field.name != 'password' %}
+          {% for error in field.errors %}
+            <span class="text-danger">{{ error }}</span>
           {% endfor %}
+          {{ field(placeholder=field.label.text, class="form-control") }}
+        {% endfor %}
 
-          <p>To confirm changes, enter your password:</p>
-          {% if form.password.errors %}
-            {% for error in form.password.errors %}
-              <span class="text-danger">
-              {{ error }}
-            </span>
-            {% endfor %}
-          {% endif %}
-          {{ form.password(placeholder="Enter your password to confirm", class="form-control") }}
+        <p>To confirm changes, enter your password:</p>
+        {% if form.password.errors %}
+          {% for error in form.password.errors %}
+            <span class="text-danger">
+            {{ error }}
+          </span>
+          {% endfor %}
+        {% endif %}
+        {{ form.password(placeholder="Enter your password to confirm", class="form-control") }}
 
-          <button class="btn btn-primary btn-lg btn-block">Edit User</button>
-        </div>
-      </form>
-    </div>
+        <button class="btn btn-primary btn-lg btn-block">Edit User</button>
+      </div>
+    </form>
   </div>
 </div>
 

@@ -2,6 +2,9 @@
 
 
 {% block content %}
+
+<div class="class-create-background pos-relative">
+
 <div class="container"><br>
   <div class="card shadow">
     <div class="card-body text-center">
@@ -27,7 +30,12 @@
 
 <div class="container">
   {% if user.classes_teaching %}
-    <br><h2 class="lead d-flex justify-content-center">You are scheduled to teach the following classes:</h2><br>
+
+  
+    <br>
+    <div><h4 class="d-flex justify-content-center">You are scheduled to teach the following classes:</h4></div>
+    <br>
+
     <div class="row">       
     {% for c in user.classes_teaching %}
       <div class="card col-md-6 col-lg-4 shadow-sm pos-relative">
@@ -85,6 +93,6 @@
   </div>
 </div>
 
-
+</div>  
 
 {% endblock %}
