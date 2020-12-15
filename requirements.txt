@@ -31,6 +31,7 @@ psycopg2==2.8.6
 pycparser==2.20
 Pygments==2.7.2
 PyJWT==1.7.1
+python-dateutil==2.8.1
 python-http-client==3.3.1
 pytz==2020.4
 requests==2.25.0
