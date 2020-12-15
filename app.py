@@ -202,7 +202,7 @@ def class_signup(class_id):
     """User signs up for a yoga class"""
 
     if not g.user:
-        flash("Access unauthorized.", "danger")
+        flash("You must sign in to enroll in a class", "danger")
         return redirect("/")
 
     # Grab yoga class from database and save logged in user to variable
