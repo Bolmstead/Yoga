@@ -9,7 +9,7 @@
   </p>
 </p>
 
-![Website_pic](static/images/website.png?raw=true "website")
+![Website_pic](static/images/read_me_pic.png?raw=true "website")
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
