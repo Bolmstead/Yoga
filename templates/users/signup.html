@@ -10,7 +10,7 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category,msg in messages %}
-              <div class="alert alert-{{ category }}" role="alert">
+              <div class="alert alert-{{ category }} text-center" role="alert">
                 {{msg}}
               </div>
             {% endfor %}
@@ -24,11 +24,12 @@
     {% endif %}
   
       <div class="card text-center col-sm-10 col-md-8 col-lg-6 shadow card-body pos-absolute" id="signup-card">
-        <div class="card-body">
+        <div class="container">
   
-            <article class="card-body">
+          
   
-              <h4 class="card-title mb-4 mt-1 text-center" id="home-h4">Create Account</h4>
+              <br><h4 class="card-title mb-4 mt-1 text-center" id="home-h4">Create Account</h4>
+              <article class="card-body">
               <form method="POST" id="login_form">
                 {{ form.csrf_token }}
                 {% for field in form if field.widget.input_type != 'hidden' %}
