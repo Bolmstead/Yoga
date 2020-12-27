@@ -9,7 +9,12 @@
     <div class="card text-center col-sm-10 col-md-8 col-lg-6 mx-auto my-auto shadow card-body">
       <div class="col-sm-10 col-md-10 mx-auto my-1">
         
+      {% if g.user.is_instructor %}
       <div class="card-title"><h3 class="featurette-heading text-center">Instructor Dashboard</h3></div>
+
+      {% else %}
+      <div class="card-title"><h3 class="featurette-heading text-center">{{user.first_name}} {{user.last_name}}</h3></div>
+      {% endif %}
 
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
