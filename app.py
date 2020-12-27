@@ -309,7 +309,7 @@ def add_class():
 
         # If the start time input is after the end time input, redirect and flash error.
         if form.start_date_time.data > form.end_date_time.data:
-            flash("Class start time must be before class end time.", "danger")
+            flash("Class cannot end before its start time", "danger")
             return redirect("/users/add_class")
 
         # Grab start and end datetime objects
@@ -377,6 +377,19 @@ def delete_class(class_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
+@app.route('/users/view_users')
+def view_users():
+    """Show information of the logged in user"""
+
+    if not g.user.is_instructor:
+        flash("Access unauthorized. Must be an instructor to access content.", "danger")
+        return redirect("/")
+
+    users = User.query.filter_by(is_instructor=False)
+    instructors = User.query.filter_by(is_instructor=True)
+
+
+    return render_template('users/view_users.html', users=users, instructors=instructors)
 
 ################## JSON ENDPOINT  #####################################
 

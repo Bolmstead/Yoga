@@ -2,23 +2,8 @@
 {% block content %}
 <div class="container-fluid">
 <div class="background-image">
-  <div class="row">
-    <div class="col-lg-6 offset-md-3 alertbox">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}<br>
-          {% for category,msg in messages %}
-            <div class="alert alert-{{ category }} text-center" role="alert">
-              {{msg}}
-            </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-    </div>
-  </div>
 
-  {% if not messages %}
   <br><br><br><br>
-  {% endif %}
   <div class="container">
   <div class="row">
     <div class="card shadow-sm col-xs-4 mr-lg-2" id="login-card">
@@ -37,9 +22,21 @@
       <div class="card-body">
 
         {% if g.user and not g.user.is_instructor %}
-        <br><br><br>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category,msg in messages %}
+          <div class="alert alert-{{ category }} text-center" role="alert">
+            {{msg}}
+          </div>
+          {% endfor %}
+          {% else %}
+          <br><br><br>
+        {% endif %}
+      {% endwith %}
+
         <div class="mx-auto greeting-box text-center">
-          <h4 class="card-title mb-4 mt-1 text-center" id="home-greeting">Hi, {{ g.user.first_name }}</h4><br><br>
+          <h1 class="card-title mb-4 mt-1" id="home-greeting">Hi, {{ g.user.first_name }}</h1>
         </div><br>
         <div class="form-group">
           <a class="nav-link" href="/#calendar_classes"><button type="button" class="btn btn-success btn-block btn-lg">View available classes</button></a>
@@ -47,20 +44,50 @@
         </div>
 
         {% elif g.user and g.user.is_instructor %}
-        <br><br><br><br>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category,msg in messages %}
+          <br>
+          <div class="alert alert-{{ category }} text-center" role="alert">
+            {{msg}}
+          </div>
+          {% endfor %}
+          {% else %}
+          <br><br><br>
+        {% endif %}
+      {% endwith %}
+
         <div class="mx-auto greeting-box text-center">
-          <h4 class="card-title mb-4 mt-1" id="instructor-greeting">Hi, {{ g.user.first_name }}</h4><br><br>
+          <h1 class="card-title mb-4 mt-1" id="instructor-greeting">Hi, {{ g.user.first_name }}</h1><br>
+
         </div>
         <div class="form-group">
-          <a class="nav-link" href="/users/detail"><button type="button" class="btn btn-success btn-block btn-lg">Instructor Access</button></a>
+          <a class="nav-link" href="/users/detail"><button type="button" class="btn btn-success btn-block btn-lg">Instructor Dashboard</button></a>
         </div>
 
         {% else%}
           <article class="card-body">
 
             <a href="/users/signup" class="float-right btn btn-outline-primary">Sign up</a>
-            <h4 class="card-title mb-4 mt-1" id="home-h4">Sign in</h4>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="row">
+          
+              {% for category,msg in messages %}
+              <div class="alert alert-{{ category }} text-center col-md-10" role="alert">
+                {{msg}}
+              </div>
+              {% endfor %}
+            </div>
+              {% else %}
+              <h4 class="card-title mb-4 mt-1" id="home-h4">Sign in</h4>
+            {% endif %}
+          {% endwith %}
+
             <form method="POST" id="login_form">
+
               {{ form.csrf_token }}
               {% for field in form if field.widget.input_type != 'hidden' %}
               

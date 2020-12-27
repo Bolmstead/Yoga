@@ -6,24 +6,28 @@
 <div class="class-create-background pos-relative">
 
 <div class="container"><br>
-  <div class="card shadow">
-    <div class="card-body text-center">
-      <div class="card-title"><h3 class="featurette-heading text-center">{{ user.first_name }} {{ user.last_name }}</h3></div>
-      <div class="row form-group">
+    <div class="card text-center col-sm-10 col-md-8 col-lg-6 mx-auto my-auto shadow card-body">
+      <div class="col-sm-10 col-md-10 mx-auto my-1">
+        
+      <div class="card-title"><h3 class="featurette-heading text-center">Instructor Dashboard</h3></div>
+
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category,msg in messages %}
-              <div class="alert alert-{{ category }} col-md-8 offset-md-2 text-center" role="alert">
+              <div class="alert alert-{{ category }} col-md-12 text-center" role="alert">
                 {{msg}}
               </div>
             {% endfor %}
           {% endif %}
         {% endwith %}
-      </div>
+
       {% if g.user.is_instructor %}
-        <div class="col-sm-10 offset-sm-1 col-md-8 offset-md-2"><a href="/users/add_class" class="btn btn-success btn-block btn-md">Create Class</a></div>
+      
+        <a href="/users/add_class" class="btn btn-info btn-block btn-md">Create Yoga Class</a>
+        <a href="/users/view_users" class="btn btn-secondary btn-block btn-md">View All Accounts</a>
+
       {% endif %}
-      <div class="col-sm-10 offset-sm-1 col-md-8 offset-md-2"><a href="/users/edit" class="btn btn-info btn-block btn-md">Edit Account Information</a></div>
+      <a href="/users/edit" class="btn btn-secondary btn-block btn-md">Edit Personal Information</a>
     </div>
   </div>
 </div>  
@@ -33,7 +37,9 @@
 
   
     <br>
-    <div><h4 class="d-flex justify-content-center">You are scheduled to teach the following classes:</h4></div>
+    <div class="container col-xs-12">
+      <h2 class="lead d-flex justify-content-center">You are scheduled to teach the following classes:</h2>
+    </div>
     <br>
 
     <div class="row">       
@@ -86,7 +92,7 @@
   {% elif not user.is_instructor and not user.classes_signed_up %}
     <br>
     <div class="container col-xs-12">
-      <p class="lead d-flex justify-content-center">You are not scheduled for any classes</p>
+      <h2 class="lead d-flex justify-content-center">You are not scheduled to take any classes</h2>
     </div>
   {% endif %}
 
