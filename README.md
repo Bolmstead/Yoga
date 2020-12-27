@@ -3,7 +3,7 @@
   <h3 align="center">Website for Lunchtime Yoga for Professionals</h3>
 
   <p align="center">
-    A mobile responsive website to allow users/instructors to create, schedule, and signup for yoga classes in Boise, Idaho.
+    A website to allow users/instructors to create, schedule, and signup for yoga classes in Boise, Idaho.
     <br />
     <a href="https://yoga-website.herokuapp.com/">View Heroku Demo</a>
   </p>
@@ -14,19 +14,19 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project was created as the Capstone 1 project for the Springboard Software Engineering Course. It will hopefully be used  operate as a website for the Lunchtime Yoga for Business Professionals group in the near future. While on the website, a user is able to do the following:
-* View information about the group including pricing, instructor bios, how to contact, and social media links.
-* Create and log into an account with an encrypted password using bcrypt.
-* Signup for available yoga classes using the website's javascript calendar.
+This project was created as the Capstone 1 project for the Springboard Software Engineering Course. It will hopefully be used  operate as a website for the Lunchtime Yoga for Business Professionals group in the future. A user can do the following on the website:
+* View the organization's information including pricing, instructor bios, contact methods, and social media links.
+* Create an account with an encrypted password using bcrypt.
+* Signup for available yoga classes using the website's interactive  calendar.
 * View enrolled yoga classes and cancel any class signup.
-* Edit their account information.
-* Receive automatic emails to confirm their yoga class signup, signup cancellation, or account creation.
+* Edit current account information.
+* Receive automatic emails confirming class signup, signup cancellation, or account creation.
 
 
-Instructors are able to do all of the above while having the ability to:
+Instructors are also able to do all of the above and are authorized to:
 * Create/delete yoga classes.
-* View who has enrolled for each class.
-* View all users and instructors contact information.
+* View all users signed up for their yoga class.
+* View contact information of all users and instructors.
 
 ![Website_pic](static/images/dashboard.png?raw=true "website")
 
@@ -91,7 +91,7 @@ Possible features that I would like to integrate into the website are:
 
 
 ## Notes
-For the sake of the capstone code review, any user can sign up to be an instructor on the website. This just allows anyone to view the instructor's functionality. If this website were to be implemented, instructors accounts would be created in a different way requiring approval.
+For the sake of the capstone code review, any user can sign up to be an instructor on the website. This allows anyone to view the instructor's functionality. If this website were to be implemented, instructors accounts would be created in a different way requiring approval.
 
 The source code for the calendar used on the website was pulled and maniputlated from [Simple Calendar](https://github.com/brospars/simple-calendar). Author of the Simple Calendar grants permission to any person to use, copy, modify, or publish the code. All documents regarding the Simple Calendar code are located in /static/calendar.
 
