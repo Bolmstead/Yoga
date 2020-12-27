@@ -9,8 +9,8 @@
   </p>
 </p>
 
-![Website_pic](static/images/dashboard.png?raw=true "website")
 ![Website_pic](static/images/yoga_homepage.png?raw=true "website")
+![Website_pic](static/images/dashboard.png?raw=true "website")
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
