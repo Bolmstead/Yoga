@@ -9,7 +9,6 @@
   </p>
 </p>
 
-![Website_pic](static/images/dashboard.png?raw=true "website")
 ![Website_pic](static/images/yoga_homepage.png?raw=true "website")
 
 <!-- ABOUT THE PROJECT -->
@@ -27,7 +26,9 @@ This project was created as the Capstone 1 project for the Springboard Software 
 Instructors are able to do all of the above while having the ability to:
 * Create/delete yoga classes.
 * View who has enrolled for each class.
+* View all users and instructors contact information.
 
+![Website_pic](static/images/dashboard.png?raw=true "website")
 
 ## Built With
 
