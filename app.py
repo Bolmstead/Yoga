@@ -307,9 +307,20 @@ def add_class():
     # If POST method create Classes instance and add to database
     if form.validate_on_submit():
 
+        # If end datetime has passed, redirect and flash error
+        if datetime.now() > form.end_date_time.data:
+            flash("Classes cannot be scheduled in the past", "danger")
+            return redirect("/users/add_class")
+
         # If the start time input is after the end time input, redirect and flash error.
         if form.start_date_time.data > form.end_date_time.data:
             flash("Class cannot end before its start time", "danger")
+            return redirect("/users/add_class")
+
+        # If yoga class is over 3.5 hours, redirect and flash error
+        time_diff = form.end_date_time.data - form.start_date_time.data
+        if (time_diff > timedelta(hours=3, minutes=30)):
+            flash("Class is too long", "danger")
             return redirect("/users/add_class")
 
         # Grab start and end datetime objects
